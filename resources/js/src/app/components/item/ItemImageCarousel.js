@@ -59,11 +59,11 @@ Vue.component("item-image-carousel", {
     {
         this.$nextTick(() =>
         {
-          setTimeout(() =>
+            setTimeout(() =>
           {
-            this.initCarousel();
-            this.initThumbCarousel();
-          }, 1);
+                this.initCarousel();
+                this.initThumbCarousel();
+            }, 1);
         });
     },
 
