@@ -83,13 +83,14 @@
 
             {% endif %}
 
-            <div class="col-xs-12 col-lg-{% if ceresConfig.header.showNavBars == "side" or ceresConfig.header.showNavBars == "both" %}9{% else %}12{% endif %}">
+            <div class="col-xs-12 col-lg-9">
                 <ul class="product-list row grid">
                     {% for item in itemList %}
                         <li class="col-xs-12 col-sm-6 col-md-4 col-lg-{% if ceresConfig.header.showNavBars == "side" or ceresConfig.header.showNavBars == "both" %}4{% else %}3{% endif %}">
                             <category-item
                                 :item-data="{{ item.data | json_encode }}"
-                                :decimal-count="{{ decimalCount }}">
+                                :decimal-count="{{ decimalCount }}"
+                            >
                                 <template slot="BeforePrices">{{ LayoutContainer.show("Ceres::CategoryItem.BeforePrices", item.data) }}</template>
                                 <template slot="AfterPrices">{{ LayoutContainer.show("Ceres::CategoryItem.AfterPrices", item.data) }}</template>
                             </category-item>
@@ -105,7 +106,7 @@
                 </div>
             </div>
         {% endif %}
-        
+
         <div class="col-xs-12">
             {% if categoryDescriptionBottom == "description1" or categoryDescriptionBottom == "both" %}
                 <div class="category-description m-b-1">{{ category.details[0].description | raw }}</div>
