@@ -21234,783 +21234,6 @@ Vue.component("user-login-handler", {
 },{"../../../helper/utils":242,"services/ApiService":245,"services/ValidationService":252}],167:[function(require,module,exports){
 "use strict";
 
-Vue.component("category-image-carousel", {
-
-    delimiters: ["${", "}"],
-
-    props: {
-        imageUrlsData: { type: Array },
-        itemUrl: { type: String },
-        altText: { type: String },
-        titleText: { type: String },
-        showDots: { type: Boolean },
-        showNav: { type: Boolean },
-        disableLazyLoad: {
-            type: Boolean,
-            default: false
-        },
-        enableCarousel: { type: Boolean },
-        template: { type: String }
-    },
-
-    data: function data() {
-        return {
-            $_enableCarousel: false
-        };
-    },
-
-
-    computed: {
-        imageUrls: function imageUrls() {
-            return this.imageUrlsData.sort(function (imageUrlA, imageUrlB) {
-                if (imageUrlA.position > imageUrlB.position) {
-                    return 1;
-                }
-                if (imageUrlA.position < imageUrlB.position) {
-                    return -1;
-                }
-
-                return 0;
-            });
-        }
-    },
-
-    created: function created() {
-        this.$options.template = this.template;
-
-        this.$_enableCarousel = this.enableCarousel && this.imageUrls.length > 1;
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        this.$nextTick(function () {
-            if (_this.$_enableCarousel) {
-                _this.initializeCarousel();
-            }
-        });
-    },
-
-
-    methods: {
-        initializeCarousel: function initializeCarousel() {
-            var _this2 = this;
-
-            $("#owl-carousel-" + this._uid).owlCarousel({
-                dots: !!this.showDots,
-                items: 1,
-                mouseDrag: false,
-                loop: this.imageUrls.length > 1,
-                lazyLoad: !this.disableLazyLoad,
-                margin: 10,
-                nav: !!this.showNav,
-                navText: ["<i id=\"owl-nav-text-left-" + this._uid + "\" class='fa fa-chevron-left' aria-hidden='true'></i>", "<i id=\"owl-nav-text-right-" + this._uid + "\" class='fa fa-chevron-right' aria-hidden='true'></i>"],
-                onTranslated: function onTranslated(event) {
-                    var target = $(event.currentTarget);
-                    var owlItem = $(target.find(".owl-item.active"));
-
-                    owlItem.find(".img-fluid.lazy").show().lazyload({ threshold: 100 });
-                },
-
-                onInitialized: function onInitialized(event) {
-                    if (_this2.showNav) {
-                        document.querySelector("#owl-nav-text-left-" + _this2._uid).parentElement.onclick = function (event) {
-                            return event.preventDefault();
-                        };
-                        document.querySelector("#owl-nav-text-right-" + _this2._uid).parentElement.onclick = function (event) {
-                            return event.preventDefault();
-                        };
-                    }
-                }
-            });
-        },
-        getAltText: function getAltText(image) {
-            var altText = image && image.alternate ? image.alternate : this.altText;
-
-            return altText;
-        },
-        loadFirstImage: function loadFirstImage() {
-            var itemLazyImage = this.$refs.itemLazyImage;
-
-            if (itemLazyImage) {
-                if (itemLazyImage.loadImage) {
-                    itemLazyImage.loadImage();
-                } else if (itemLazyImage[0] && itemLazyImage[0].loadImage) {
-                    itemLazyImage[0].loadImage();
-                }
-            }
-        }
-    }
-});
-
-},{}],168:[function(require,module,exports){
-"use strict";
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-Vue.component("category-item", {
-    props: {
-        template: {
-            type: String,
-            default: "#vue-category-item"
-        },
-        decimalCount: {
-            type: Number,
-            default: 0
-        },
-        imageUrlAccessor: {
-            type: String,
-            default: "urlMiddle"
-        },
-        itemData: {
-            type: Object,
-            required: true
-        }
-    },
-
-    data: function data() {
-        return {
-            recommendedRetailPrice: 0,
-            variationRetailPrice: 0
-        };
-    },
-
-
-    computed: _extends({
-        /**
-         * returns itemData.item.storeSpecial
-         */
-        storeSpecial: function storeSpecial() {
-            return this.itemData.item.storeSpecial;
-        },
-
-
-        /**
-         * returns itemData.texts[0]
-         */
-        texts: function texts() {
-            return this.itemData.texts;
-        }
-    }, Vuex.mapState({
-        showNetPrices: function showNetPrices(state) {
-            return state.basket.showNetPrices;
-        }
-    })),
-
-    created: function created() {
-        this.$options.template = this.template;
-
-        if (this.itemData.prices.rrp) {
-            this.recommendedRetailPrice = this.itemData.prices.rrp.price.value;
-        }
-        this.variationRetailPrice = this.itemData.prices.default.price.value;
-    },
-
-
-    methods: {
-        loadFirstImage: function loadFirstImage() {
-            var categoryImageCarousel = this.$refs.categoryImageCarousel;
-
-            if (categoryImageCarousel) {
-                categoryImageCarousel.loadFirstImage();
-            }
-        }
-    }
-
-});
-
-},{}],169:[function(require,module,exports){
-"use strict";
-
-Vue.component("item-lazy-img", {
-
-    delimiters: ["${", "}"],
-
-    props: ["imageUrl", "template"],
-
-    created: function created() {
-        this.$options.template = this.template;
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        this.$nextTick(function () {
-            setTimeout(function () {
-                $(_this.$refs.lazyImg).show().lazyload({ threshold: 100 });
-            }, 1);
-        });
-    },
-
-
-    methods: {
-        loadImage: function loadImage() {
-            $(this.$refs.lazyImg).trigger("appear");
-        }
-    }
-});
-
-},{}],170:[function(require,module,exports){
-"use strict";
-
-var _ApiService = require("services/ApiService");
-
-var _ApiService2 = _interopRequireDefault(_ApiService);
-
-var _TranslationService = require("services/TranslationService");
-
-var _TranslationService2 = _interopRequireDefault(_TranslationService);
-
-var _UrlService = require("services/UrlService");
-
-var _UrlService2 = _interopRequireDefault(_UrlService);
-
-var _utils = require("../../helper/utils");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-Vue.component("item-search", {
-
-    props: {
-        template: {
-            type: String,
-            default: "#vue-item-search"
-        },
-        showItemImages: {
-            type: Boolean,
-            default: false
-        },
-        forwardToSingleItem: {
-            type: Boolean,
-            default: App.config.search.forwardToSingleItem
-        }
-    },
-
-    data: function data() {
-        return {
-            promiseCount: 0,
-            autocompleteResult: [],
-            selectedAutocompleteIndex: -1,
-            isSearchFocused: false
-        };
-    },
-
-
-    computed: {
-        selectedAutocompleteItem: function selectedAutocompleteItem() {
-            var selectedAutocompleteItem = this.autocompleteResult[this.selectedAutocompleteIndex];
-
-            if (this.selectedAutocompleteIndex < 0 || !selectedAutocompleteItem) {
-                return null;
-            }
-
-            return selectedAutocompleteItem;
-        }
-    },
-
-    created: function created() {
-        this.$options.template = this.template;
-    },
-    mounted: function mounted() {
-        var _this = this;
-
-        this.$nextTick(function () {
-            var urlParams = _UrlService2.default.getUrlParams(document.location.search);
-
-            _this.$store.commit("setItemListSearchString", urlParams.query);
-
-            _this.$refs.searchInput.value = !(0, _utils.isNullOrUndefined)(urlParams.query) ? urlParams.query : "";
-        });
-    },
-
-
-    methods: {
-        prepareSearch: function prepareSearch() {
-            if (this.selectedAutocompleteItem) {
-                if (this.forwardToSingleItem) {
-                    window.open(this.selectedAutocompleteItem.url, "_self", false);
-                } else {
-                    this.$refs.searchInput.value = this.selectedAutocompleteItem.name;
-                    this.$store.commit("setItemListSearchString", this.$refs.searchInput.value);
-
-                    this.search();
-                }
-            } else {
-                this.search();
-            }
-
-            $("#searchBox").collapse("hide");
-        },
-        search: function search() {
-            if (this.$refs.searchInput.value.length) {
-                if (document.location.pathname === "/search") {
-                    this.updateTitle(this.$refs.searchInput.value);
-                    // TODO reload?
-                    this.$store.dispatch("searchItems", this.$refs.searchInput.value);
-
-                    this.selectedAutocompleteIndex = -1;
-                    this.autocompleteResult = [];
-                } else {
-                    var searchBaseURL = "/search?query=";
-
-                    if (App.defaultLanguage !== App.language) {
-                        searchBaseURL = "/" + App.language + "/search?query=";
-                    }
-
-                    window.open(searchBaseURL + this.$refs.searchInput.value, "_self", false);
-                }
-            } else {
-                this.preventSearch = false;
-            }
-        },
-        updateTitle: function updateTitle(searchString) {
-            var searchPageTitle = document.querySelector("#searchPageTitle");
-            var title = _TranslationService2.default.translate("Ceres::Template.itemSearchResults") + " " + searchString;
-
-            if (!(0, _utils.isNullOrUndefined)(searchPageTitle)) {
-                searchPageTitle.innerHTML = "";
-                searchPageTitle.appendChild(document.createTextNode(title));
-            }
-
-            document.title = title + " | " + _TranslationService2.default.translate("Ceres::Template.headerCompanyName");
-        },
-        autocomplete: function autocomplete(searchString) {
-            var _this2 = this;
-
-            if (searchString.length >= 2) {
-                if (this.promiseCount >= Number.MAX_SAFE_INTEGER) {
-                    this.promiseCount = 0;
-                }
-
-                var promiseCount = ++this.promiseCount;
-
-                _ApiService2.default.get("/rest/io/item/search/autocomplete", { template: "Ceres::ItemList.Components.ItemSearch", query: searchString }).done(function (response) {
-                    if (_this2.promiseCount === promiseCount) {
-                        _this2.transformAutocomplete(response, searchString);
-                    }
-                });
-            } else {
-                this.autocompleteResult = [];
-            }
-        },
-
-
-        // transform the autocomplete result to usable object
-        transformAutocomplete: function transformAutocomplete(data, searchString) {
-            this.autocompleteResult = [];
-            this.selectedAutocompleteIndex = -1;
-
-            if (data && data.documents.length) {
-                var _iteratorNormalCompletion = true;
-                var _didIteratorError = false;
-                var _iteratorError = undefined;
-
-                try {
-                    for (var _iterator = data.documents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                        var item = _step.value;
-
-                        var images = this.$options.filters.itemImages(item.data.images, "urlPreview");
-                        var img = this.$options.filters.itemImage(images);
-                        var url = this.$options.filters.itemURL(item.data);
-                        var name = this.$options.filters.itemName(item.data);
-
-                        var displayName = name;
-
-                        var _iteratorNormalCompletion2 = true;
-                        var _didIteratorError2 = false;
-                        var _iteratorError2 = undefined;
-
-                        try {
-                            for (var _iterator2 = searchString.split(" ")[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
-                                var split = _step2.value;
-
-                                displayName = displayName.replace(split, "<strong>" + split + "</strong>");
-                            }
-                        } catch (err) {
-                            _didIteratorError2 = true;
-                            _iteratorError2 = err;
-                        } finally {
-                            try {
-                                if (!_iteratorNormalCompletion2 && _iterator2.return) {
-                                    _iterator2.return();
-                                }
-                            } finally {
-                                if (_didIteratorError2) {
-                                    throw _iteratorError2;
-                                }
-                            }
-                        }
-
-                        this.autocompleteResult.push({
-                            img: img,
-                            url: url,
-                            name: name,
-                            displayName: displayName
-                        });
-                    }
-                } catch (err) {
-                    _didIteratorError = true;
-                    _iteratorError = err;
-                } finally {
-                    try {
-                        if (!_iteratorNormalCompletion && _iterator.return) {
-                            _iterator.return();
-                        }
-                    } finally {
-                        if (_didIteratorError) {
-                            throw _iteratorError;
-                        }
-                    }
-                }
-            }
-        },
-        selectAutocompleteItem: function selectAutocompleteItem(item) {
-            if (this.forwardToSingleItem) {
-                window.open(item.url, "_self", false);
-            } else {
-                this.$refs.searchInput.value = item.name;
-                this.$store.commit("setItemListSearchString", this.$refs.searchInput.value);
-
-                this.search();
-            }
-        },
-        keyup: function keyup() {
-            this.selectedAutocompleteIndex--;
-
-            if (this.selectedAutocompleteIndex < 0) {
-                this.selectedAutocompleteIndex = 0;
-            }
-        },
-        keydown: function keydown() {
-            this.selectedAutocompleteIndex++;
-
-            if (this.selectedAutocompleteIndex > this.autocompleteResult.length - 1) {
-                this.selectedAutocompleteIndex = this.autocompleteResult.length - 1;
-            }
-        },
-
-
-        // hide autocomplete after 100ms to make clicking on it possible
-        setIsSearchFocused: function setIsSearchFocused(value) {
-            var _this3 = this;
-
-            setTimeout(function () {
-                _this3.isSearchFocused = !!value;
-            }, 100);
-        }
-    }
-});
-
-},{"../../helper/utils":242,"services/ApiService":245,"services/TranslationService":250,"services/UrlService":251}],171:[function(require,module,exports){
-"use strict";
-
-var _utils = require("../../helper/utils");
-
-Vue.component("item-store-special", {
-
-    delimiters: ["${", "}"],
-
-    template: "#vue-item-store-special",
-
-    props: ["storeSpecial", "recommendedRetailPrice", "variationRetailPrice", "decimalCount", "bundleType"],
-
-    data: function data() {
-        return {
-            tagClass: "",
-            label: "",
-            tagClasses: {
-                1: "bg-danger",
-                2: "bg-primary",
-                default: "bg-success"
-            }
-        };
-    },
-    created: function created() {
-
-        if (!(0, _utils.isNullOrUndefined)(this.storeSpecial)) {
-            this.tagClass = this.tagClasses[this.storeSpecial.id] || this.tagClasses.default;
-        } else {
-            this.tagClass = this.tagClasses.default;
-        }
-
-        this.label = this.getLabel();
-    },
-
-
-    methods: {
-        getLabel: function getLabel() {
-            if ((0, _utils.isNullOrUndefined)(this.storeSpecial)) {
-                if ((0, _utils.isNullOrUndefined)(this.recommendedRetailPrice)) {
-                    return "";
-                }
-
-                return this.getPercentageSale();
-            }
-
-            if (this.storeSpecial.id === 1 && !(0, _utils.isNullOrUndefined)(this.recommendedRetailPrice)) {
-                return this.getPercentageSale();
-            }
-
-            return this.storeSpecial.names.name;
-        },
-        getPercentageSale: function getPercentageSale() {
-            // eslint-disable-next-line
-            var percent = (1 - this.variationRetailPrice.unitPrice.value / this.recommendedRetailPrice.price.value) * -100;
-
-            if (percent < 0) {
-                return percent.toFixed(this.decimalCount).replace(".", App.decimalSeparator) + "%";
-            }
-
-            return "";
-        }
-    }
-});
-
-},{"../../helper/utils":242}],172:[function(require,module,exports){
-"use strict";
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _TranslationService = require("services/TranslationService");
-
-var _TranslationService2 = _interopRequireDefault(_TranslationService);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-Vue.component("item-filter", {
-
-    delimiters: ["${", "}"],
-
-    props: ["template", "facet"],
-
-    computed: _extends({
-        facets: function facets() {
-            return this.facet.values.sort(function (facetA, facetB) {
-                if (facetA.position > facetB.position) {
-                    return 1;
-                }
-                if (facetA.position < facetB.position) {
-                    return -1;
-                }
-
-                return 0;
-            });
-        },
-        facetName: function facetName() {
-            if (this.facet.translationKey && this.facet.translationKey.length > 0) {
-                return _TranslationService2.default.translate("Ceres::Template." + this.facet.translationKey);
-            }
-
-            return this.facet.name;
-        }
-    }, Vuex.mapState({
-        selectedFacets: function selectedFacets(state) {
-            return state.itemList.selectedFacets;
-        },
-        isLoading: function isLoading(state) {
-            return state.itemList.isLoading;
-        }
-    })),
-
-    created: function created() {
-        this.$options.template = this.template || "#vue-item-filter";
-    },
-
-
-    methods: {
-        updateFacet: function updateFacet(facetValue) {
-            this.$store.dispatch("selectFacet", { facetValue: facetValue, showFilter: true });
-        },
-        isSelected: function isSelected(facetValueId) {
-            return this.selectedFacets.findIndex(function (selectedFacet) {
-                return selectedFacet.id === facetValueId;
-            }) > -1;
-        }
-    }
-});
-
-},{"services/TranslationService":250}],173:[function(require,module,exports){
-"use strict";
-
-var _UrlService = require("services/UrlService");
-
-var _UrlService2 = _interopRequireDefault(_UrlService);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-Vue.component("item-filter-list", {
-
-    delimiters: ["${", "}"],
-
-    props: {
-        template: {
-            type: String,
-            default: "#vue-item-filter-list"
-        },
-        facetData: {
-            type: Array,
-            default: function _default() {
-                return [];
-            }
-        }
-    },
-
-    data: function data() {
-        return {
-            isActive: false
-        };
-    },
-
-
-    computed: Vuex.mapState({
-        facets: function facets(state) {
-            return state.itemList.facets.sort(function (facetA, facetB) {
-                if (facetA.position > facetB.position) {
-                    return 1;
-                }
-                if (facetA.position < facetB.position) {
-                    return -1;
-                }
-
-                return 0;
-            });
-        }
-    }),
-
-    created: function created() {
-        this.$store.commit("setFacets", this.facetData);
-
-        this.$options.template = this.template;
-
-        var urlParams = _UrlService2.default.getUrlParams(document.location.search);
-
-        var selectedFacets = [];
-
-        if (urlParams.facets) {
-            selectedFacets = urlParams.facets.split(",");
-        }
-
-        if ("showFilter" in urlParams) {
-            this.isActive = true;
-            _UrlService2.default.removeUrlParam("showFilter");
-        }
-
-        if (urlParams.priceMin || urlParams.priceMax) {
-            var priceMin = urlParams.priceMin || "";
-            var priceMax = urlParams.priceMax || "";
-
-            this.$store.commit("setPriceFacet", { priceMin: priceMin, priceMax: priceMax, showFilter: true });
-
-            selectedFacets.push("price");
-        }
-
-        if (selectedFacets.length > 0) {
-            this.$store.commit("setSelectedFacetsByIds", selectedFacets);
-        }
-    },
-
-
-    methods: {
-        toggleOpeningState: function toggleOpeningState() {
-            var _this = this;
-
-            window.setTimeout(function () {
-                _this.isActive = !_this.isActive;
-            }, 300);
-        }
-    }
-});
-
-},{"services/UrlService":251}],174:[function(require,module,exports){
-"use strict";
-
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _UrlService = require("services/UrlService");
-
-var _UrlService2 = _interopRequireDefault(_UrlService);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-Vue.component("item-filter-price", {
-
-    delimiters: ["${", "}"],
-
-    props: {
-        template: {
-            type: String,
-            default: "#vue-item-filter-price"
-        }
-    },
-
-    data: function data() {
-        return {
-            priceMin: "",
-            priceMax: "",
-            currency: App.activeCurrency
-        };
-    },
-    created: function created() {
-        this.$options.template = this.template || "#vue-item-filter-price";
-
-        var urlParams = _UrlService2.default.getUrlParams(document.location.search);
-
-        this.priceMin = urlParams.priceMin || "";
-        this.priceMax = urlParams.priceMax || "";
-    },
-
-
-    computed: _extends({
-        isDisabled: function isDisabled() {
-            return this.priceMin === "" && this.priceMax === "" || parseInt(this.priceMin) >= parseInt(this.priceMax) || this.isLoading;
-        }
-    }, Vuex.mapState({
-        isLoading: function isLoading(state) {
-            return state.itemList.isLoading;
-        }
-    })),
-
-    methods: {
-        selectAll: function selectAll(event) {
-            event.target.select();
-        },
-        triggerFilter: function triggerFilter() {
-            if (!this.isDisabled) {
-                // TODO reload
-                this.$store.dispatch("selectPriceFacet", { priceMin: this.priceMin, priceMax: this.priceMax });
-            }
-        }
-    }
-});
-
-},{"services/UrlService":251}],175:[function(require,module,exports){
-"use strict";
-
-Vue.component("item-filter-tag-list", {
-
-    delimiters: ["${", "}"],
-
-    props: ["template"],
-
-    computed: Vuex.mapState({
-        tagList: function tagList(state) {
-            return state.itemList.selectedFacets;
-        }
-    }),
-
-    created: function created() {
-        this.$options.template = this.template || "#vue-item-filter-tag-list";
-    },
-
-
-    methods: {
-        removeTag: function removeTag(tag) {
-            this.$store.dispatch("selectFacet", { facetValue: tag });
-        }
-    }
-});
-
-},{}],176:[function(require,module,exports){
-"use strict";
-
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 var _TranslationService = require("services/TranslationService");
@@ -22103,7 +21326,7 @@ Vue.component("add-to-wish-list", {
     }
 });
 
-},{"services/NotificationService":249,"services/TranslationService":250}],177:[function(require,module,exports){
+},{"services/NotificationService":249,"services/TranslationService":250}],168:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -22154,7 +21377,7 @@ Vue.component("graduated-prices", {
     }
 });
 
-},{}],178:[function(require,module,exports){
+},{}],169:[function(require,module,exports){
 "use strict";
 
 Vue.component("item-bundle", {
@@ -22198,7 +21421,7 @@ Vue.component("item-bundle", {
     }
 });
 
-},{}],179:[function(require,module,exports){
+},{}],170:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -22260,10 +21483,8 @@ Vue.component("item-image-carousel", {
         var _this2 = this;
 
         this.$nextTick(function () {
-            setTimeout(function () {
-                _this2.initCarousel();
-                _this2.initThumbCarousel();
-            }, 1);
+            _this2.initCarousel();
+            _this2.initThumbCarousel();
         });
     },
 
@@ -22392,7 +21613,7 @@ Vue.component("item-image-carousel", {
     }
 });
 
-},{"../../helper/utils":242,"services/TranslationService":250}],180:[function(require,module,exports){
+},{"../../helper/utils":242,"services/TranslationService":250}],171:[function(require,module,exports){
 "use strict";
 
 Vue.component("order-properties", {
@@ -22413,7 +21634,7 @@ Vue.component("order-properties", {
     methods: Vuex.mapMutations(["setVariationOrderProperty"])
 });
 
-},{}],181:[function(require,module,exports){
+},{}],172:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -22556,7 +21777,7 @@ Vue.component("order-property-list", {
     }
 });
 
-},{}],182:[function(require,module,exports){
+},{}],173:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -22632,7 +21853,7 @@ Vue.component("order-property-list-group", {
     }, Vuex.mapMutations(["setVariationOrderProperty"]))
 });
 
-},{}],183:[function(require,module,exports){
+},{}],174:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -22812,7 +22033,7 @@ Vue.component("order-property-list-item", {
     })
 });
 
-},{"services/ApiService":245,"services/NotificationService":249}],184:[function(require,module,exports){
+},{"services/ApiService":245,"services/NotificationService":249}],175:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -23030,7 +22251,7 @@ Vue.component("quantity-input", {
     }
 });
 
-},{"../../helper/debounce":237,"../../helper/number":239,"../../helper/utils":242,"../../services/TranslationService":250}],185:[function(require,module,exports){
+},{"../../helper/debounce":237,"../../helper/number":239,"../../helper/utils":242,"../../services/TranslationService":250}],176:[function(require,module,exports){
 "use strict";
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
@@ -23080,7 +22301,7 @@ Vue.component("single-item", {
     }
 });
 
-},{}],186:[function(require,module,exports){
+},{}],177:[function(require,module,exports){
 "use strict";
 
 var _util = require("util");
@@ -23341,7 +22562,853 @@ Vue.component("variation-select", {
     }
 });
 
-},{"../../helper/dom":238,"lodash/uniq":126,"services/ApiService":245,"util":131}],187:[function(require,module,exports){
+},{"../../helper/dom":238,"lodash/uniq":126,"services/ApiService":245,"util":131}],178:[function(require,module,exports){
+"use strict";
+
+Vue.component("category-image-carousel", {
+
+    delimiters: ["${", "}"],
+
+    props: {
+        imageUrlsData: { type: Array },
+        itemUrl: { type: String },
+        altText: { type: String },
+        titleText: { type: String },
+        showDots: { type: Boolean },
+        showNav: { type: Boolean },
+        disableLazyLoad: {
+            type: Boolean,
+            default: false
+        },
+        enableCarousel: { type: Boolean },
+        template: { type: String }
+    },
+
+    data: function data() {
+        return {
+            $_enableCarousel: false
+        };
+    },
+
+
+    computed: {
+        imageUrls: function imageUrls() {
+            return this.imageUrlsData.sort(function (imageUrlA, imageUrlB) {
+                if (imageUrlA.position > imageUrlB.position) {
+                    return 1;
+                }
+                if (imageUrlA.position < imageUrlB.position) {
+                    return -1;
+                }
+
+                return 0;
+            });
+        }
+    },
+
+    created: function created() {
+        this.$options.template = this.template;
+
+        this.$_enableCarousel = this.enableCarousel && this.imageUrls.length > 1;
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        this.$nextTick(function () {
+            if (_this.$_enableCarousel) {
+                _this.initializeCarousel();
+            }
+        });
+    },
+
+
+    methods: {
+        initializeCarousel: function initializeCarousel() {
+            var _this2 = this;
+
+            $("#owl-carousel-" + this._uid).owlCarousel({
+                dots: !!this.showDots,
+                items: 1,
+                mouseDrag: false,
+                loop: this.imageUrls.length > 1,
+                lazyLoad: !this.disableLazyLoad,
+                margin: 10,
+                nav: !!this.showNav,
+                navText: ["<i id=\"owl-nav-text-left-" + this._uid + "\" class='fa fa-chevron-left' aria-hidden='true'></i>", "<i id=\"owl-nav-text-right-" + this._uid + "\" class='fa fa-chevron-right' aria-hidden='true'></i>"],
+                onTranslated: function onTranslated(event) {
+                    var target = $(event.currentTarget);
+                    var owlItem = $(target.find(".owl-item.active"));
+
+                    owlItem.find(".img-fluid.lazy").show().lazyload({ threshold: 100 });
+                },
+
+                onInitialized: function onInitialized(event) {
+                    if (_this2.showNav) {
+                        document.querySelector("#owl-nav-text-left-" + _this2._uid).parentElement.onclick = function (event) {
+                            return event.preventDefault();
+                        };
+                        document.querySelector("#owl-nav-text-right-" + _this2._uid).parentElement.onclick = function (event) {
+                            return event.preventDefault();
+                        };
+                    }
+                }
+            });
+        },
+        getAltText: function getAltText(image) {
+            var altText = image && image.alternate ? image.alternate : this.altText;
+
+            return altText;
+        },
+        loadFirstImage: function loadFirstImage() {
+            var itemLazyImage = this.$refs.itemLazyImage;
+
+            if (itemLazyImage) {
+                if (itemLazyImage.loadImage) {
+                    itemLazyImage.loadImage();
+                } else if (itemLazyImage[0] && itemLazyImage[0].loadImage) {
+                    itemLazyImage[0].loadImage();
+                }
+            }
+        }
+    }
+});
+
+},{}],179:[function(require,module,exports){
+"use strict";
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+Vue.component("category-item", {
+    props: {
+        template: {
+            type: String,
+            default: "#vue-category-item"
+        },
+        decimalCount: {
+            type: Number,
+            default: 0
+        },
+        imageUrlAccessor: {
+            type: String,
+            default: "urlMiddle"
+        },
+        itemData: {
+            type: Object,
+            required: true
+        }
+    },
+
+    data: function data() {
+        return {
+            recommendedRetailPrice: 0,
+            variationRetailPrice: 0
+        };
+    },
+
+
+    computed: _extends({
+        /**
+         * returns itemData.item.storeSpecial
+         */
+        storeSpecial: function storeSpecial() {
+            return this.itemData.item.storeSpecial;
+        },
+
+
+        /**
+         * returns itemData.texts[0]
+         */
+        texts: function texts() {
+            return this.itemData.texts;
+        }
+    }, Vuex.mapState({
+        showNetPrices: function showNetPrices(state) {
+            return state.basket.showNetPrices;
+        }
+    })),
+
+    created: function created() {
+        this.$options.template = this.template;
+
+        if (this.itemData.prices.rrp) {
+            this.recommendedRetailPrice = this.itemData.prices.rrp.price.value;
+        }
+        this.variationRetailPrice = this.itemData.prices.default.price.value;
+    },
+
+
+    methods: {
+        loadFirstImage: function loadFirstImage() {
+            var categoryImageCarousel = this.$refs.categoryImageCarousel;
+
+            if (categoryImageCarousel) {
+                categoryImageCarousel.loadFirstImage();
+            }
+        }
+    }
+
+});
+
+},{}],180:[function(require,module,exports){
+"use strict";
+
+Vue.component("item-lazy-img", {
+
+    delimiters: ["${", "}"],
+
+    props: ["imageUrl", "template"],
+
+    created: function created() {
+        this.$options.template = this.template;
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        this.$nextTick(function () {
+            setTimeout(function () {
+                $(_this.$refs.lazyImg).show().lazyload({ threshold: 100 });
+            }, 1);
+        });
+    },
+
+
+    methods: {
+        loadImage: function loadImage() {
+            $(this.$refs.lazyImg).trigger("appear");
+        }
+    }
+});
+
+},{}],181:[function(require,module,exports){
+"use strict";
+
+var _ApiService = require("services/ApiService");
+
+var _ApiService2 = _interopRequireDefault(_ApiService);
+
+var _TranslationService = require("services/TranslationService");
+
+var _TranslationService2 = _interopRequireDefault(_TranslationService);
+
+var _UrlService = require("services/UrlService");
+
+var _UrlService2 = _interopRequireDefault(_UrlService);
+
+var _utils = require("../../helper/utils");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+Vue.component("item-search", {
+
+    props: {
+        template: {
+            type: String,
+            default: "#vue-item-search"
+        },
+        showItemImages: {
+            type: Boolean,
+            default: false
+        },
+        forwardToSingleItem: {
+            type: Boolean,
+            default: App.config.search.forwardToSingleItem
+        }
+    },
+
+    data: function data() {
+        return {
+            promiseCount: 0,
+            autocompleteResult: [],
+            selectedAutocompleteIndex: -1,
+            isSearchFocused: false
+        };
+    },
+
+
+    computed: {
+        selectedAutocompleteItem: function selectedAutocompleteItem() {
+            var selectedAutocompleteItem = this.autocompleteResult[this.selectedAutocompleteIndex];
+
+            if (this.selectedAutocompleteIndex < 0 || !selectedAutocompleteItem) {
+                return null;
+            }
+
+            return selectedAutocompleteItem;
+        }
+    },
+
+    created: function created() {
+        this.$options.template = this.template;
+    },
+    mounted: function mounted() {
+        var _this = this;
+
+        this.$nextTick(function () {
+            var urlParams = _UrlService2.default.getUrlParams(document.location.search);
+
+            _this.$store.commit("setItemListSearchString", urlParams.query);
+
+            _this.$refs.searchInput.value = !(0, _utils.isNullOrUndefined)(urlParams.query) ? urlParams.query : "";
+        });
+    },
+
+
+    methods: {
+        prepareSearch: function prepareSearch() {
+            if (this.selectedAutocompleteItem) {
+                if (this.forwardToSingleItem) {
+                    window.open(this.selectedAutocompleteItem.url, "_self", false);
+                } else {
+                    this.$refs.searchInput.value = this.selectedAutocompleteItem.name;
+                    this.$store.commit("setItemListSearchString", this.$refs.searchInput.value);
+
+                    this.search();
+                }
+            } else {
+                this.search();
+            }
+
+            $("#searchBox").collapse("hide");
+        },
+        search: function search() {
+            if (this.$refs.searchInput.value.length) {
+                if (document.location.pathname === "/search") {
+                    this.updateTitle(this.$refs.searchInput.value);
+                    // TODO reload?
+                    this.$store.dispatch("searchItems", this.$refs.searchInput.value);
+
+                    this.selectedAutocompleteIndex = -1;
+                    this.autocompleteResult = [];
+                } else {
+                    var searchBaseURL = "/search?query=";
+
+                    if (App.defaultLanguage !== App.language) {
+                        searchBaseURL = "/" + App.language + "/search?query=";
+                    }
+
+                    window.open(searchBaseURL + this.$refs.searchInput.value, "_self", false);
+                }
+            } else {
+                this.preventSearch = false;
+            }
+        },
+        updateTitle: function updateTitle(searchString) {
+            var searchPageTitle = document.querySelector("#searchPageTitle");
+            var title = _TranslationService2.default.translate("Ceres::Template.itemSearchResults") + " " + searchString;
+
+            if (!(0, _utils.isNullOrUndefined)(searchPageTitle)) {
+                searchPageTitle.innerHTML = "";
+                searchPageTitle.appendChild(document.createTextNode(title));
+            }
+
+            document.title = title + " | " + _TranslationService2.default.translate("Ceres::Template.headerCompanyName");
+        },
+        autocomplete: function autocomplete(searchString) {
+            var _this2 = this;
+
+            if (searchString.length >= 2) {
+                if (this.promiseCount >= Number.MAX_SAFE_INTEGER) {
+                    this.promiseCount = 0;
+                }
+
+                var promiseCount = ++this.promiseCount;
+
+                _ApiService2.default.get("/rest/io/item/search/autocomplete", { template: "Ceres::ItemList.Components.ItemSearch", query: searchString }).done(function (response) {
+                    if (_this2.promiseCount === promiseCount) {
+                        _this2.transformAutocomplete(response, searchString);
+                    }
+                });
+            } else {
+                this.autocompleteResult = [];
+            }
+        },
+
+
+        // transform the autocomplete result to usable object
+        transformAutocomplete: function transformAutocomplete(data, searchString) {
+            this.autocompleteResult = [];
+            this.selectedAutocompleteIndex = -1;
+
+            if (data && data.documents.length) {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    for (var _iterator = data.documents[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var item = _step.value;
+
+                        var images = this.$options.filters.itemImages(item.data.images, "urlPreview");
+                        var img = this.$options.filters.itemImage(images);
+                        var url = this.$options.filters.itemURL(item.data);
+                        var name = this.$options.filters.itemName(item.data);
+
+                        var displayName = name;
+
+                        var _iteratorNormalCompletion2 = true;
+                        var _didIteratorError2 = false;
+                        var _iteratorError2 = undefined;
+
+                        try {
+                            for (var _iterator2 = searchString.split(" ")[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                                var split = _step2.value;
+
+                                displayName = displayName.replace(split, "<strong>" + split + "</strong>");
+                            }
+                        } catch (err) {
+                            _didIteratorError2 = true;
+                            _iteratorError2 = err;
+                        } finally {
+                            try {
+                                if (!_iteratorNormalCompletion2 && _iterator2.return) {
+                                    _iterator2.return();
+                                }
+                            } finally {
+                                if (_didIteratorError2) {
+                                    throw _iteratorError2;
+                                }
+                            }
+                        }
+
+                        this.autocompleteResult.push({
+                            img: img,
+                            url: url,
+                            name: name,
+                            displayName: displayName
+                        });
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+            }
+        },
+        selectAutocompleteItem: function selectAutocompleteItem(item) {
+            if (this.forwardToSingleItem) {
+                window.open(item.url, "_self", false);
+            } else {
+                this.$refs.searchInput.value = item.name;
+                this.$store.commit("setItemListSearchString", this.$refs.searchInput.value);
+
+                this.search();
+            }
+        },
+        keyup: function keyup() {
+            this.selectedAutocompleteIndex--;
+
+            if (this.selectedAutocompleteIndex < 0) {
+                this.selectedAutocompleteIndex = 0;
+            }
+        },
+        keydown: function keydown() {
+            this.selectedAutocompleteIndex++;
+
+            if (this.selectedAutocompleteIndex > this.autocompleteResult.length - 1) {
+                this.selectedAutocompleteIndex = this.autocompleteResult.length - 1;
+            }
+        },
+
+
+        // hide autocomplete after 100ms to make clicking on it possible
+        setIsSearchFocused: function setIsSearchFocused(value) {
+            var _this3 = this;
+
+            setTimeout(function () {
+                _this3.isSearchFocused = !!value;
+            }, 100);
+        }
+    }
+});
+
+},{"../../helper/utils":242,"services/ApiService":245,"services/TranslationService":250,"services/UrlService":251}],182:[function(require,module,exports){
+"use strict";
+
+var _utils = require("../../helper/utils");
+
+Vue.component("item-store-special", {
+
+    delimiters: ["${", "}"],
+
+    template: "#vue-item-store-special",
+
+    props: ["storeSpecial", "recommendedRetailPrice", "variationRetailPrice", "decimalCount", "bundleType"],
+
+    data: function data() {
+        return {
+            tagClass: "",
+            label: "",
+            tagClasses: {
+                1: "bg-danger",
+                2: "bg-primary",
+                default: "bg-success"
+            }
+        };
+    },
+    created: function created() {
+
+        if (!(0, _utils.isNullOrUndefined)(this.storeSpecial)) {
+            this.tagClass = this.tagClasses[this.storeSpecial.id] || this.tagClasses.default;
+        } else {
+            this.tagClass = this.tagClasses.default;
+        }
+
+        this.label = this.getLabel();
+    },
+
+
+    methods: {
+        getLabel: function getLabel() {
+            if ((0, _utils.isNullOrUndefined)(this.storeSpecial)) {
+                if ((0, _utils.isNullOrUndefined)(this.recommendedRetailPrice)) {
+                    return "";
+                }
+
+                return this.getPercentageSale();
+            }
+
+            if (this.storeSpecial.id === 1 && !(0, _utils.isNullOrUndefined)(this.recommendedRetailPrice)) {
+                return this.getPercentageSale();
+            }
+
+            return this.storeSpecial.names.name;
+        },
+        getPercentageSale: function getPercentageSale() {
+            // eslint-disable-next-line
+            var percent = (1 - this.variationRetailPrice.unitPrice.value / this.recommendedRetailPrice.price.value) * -100;
+
+            if (percent < 0) {
+                return percent.toFixed(this.decimalCount).replace(".", App.decimalSeparator) + "%";
+            }
+
+            return "";
+        }
+    }
+});
+
+},{"../../helper/utils":242}],183:[function(require,module,exports){
+"use strict";
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _TranslationService = require("services/TranslationService");
+
+var _TranslationService2 = _interopRequireDefault(_TranslationService);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+Vue.component("item-filter", {
+
+    delimiters: ["${", "}"],
+
+    props: ["template", "facet"],
+
+    computed: _extends({
+        facets: function facets() {
+            return this.facet.values.sort(function (facetA, facetB) {
+                if (facetA.position > facetB.position) {
+                    return 1;
+                }
+                if (facetA.position < facetB.position) {
+                    return -1;
+                }
+
+                return 0;
+            });
+        },
+        facetName: function facetName() {
+            if (this.facet.translationKey && this.facet.translationKey.length > 0) {
+                return _TranslationService2.default.translate("Ceres::Template." + this.facet.translationKey);
+            }
+
+            return this.facet.name;
+        }
+    }, Vuex.mapState({
+        selectedFacets: function selectedFacets(state) {
+            return state.itemList.selectedFacets;
+        },
+        isLoading: function isLoading(state) {
+            return state.itemList.isLoading;
+        }
+    })),
+
+    created: function created() {
+        this.$options.template = this.template || "#vue-item-filter";
+    },
+
+
+    methods: {
+        updateFacet: function updateFacet(facetValue) {
+            this.$store.dispatch("selectFacetNew", { facetValue: facetValue, isSelected: this.isSelected(facetValue.id) });
+            // this.$store.dispatch("selectFacet", {facetValue});
+        },
+        isSelected: function isSelected(facetValueId) {
+            return this.selectedFacets.findIndex(function (selectedFacet) {
+                return selectedFacet.id === facetValueId;
+            }) > -1;
+        }
+    }
+});
+
+},{"services/TranslationService":250}],184:[function(require,module,exports){
+"use strict";
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _UrlService = require("services/UrlService");
+
+var _UrlService2 = _interopRequireDefault(_UrlService);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+Vue.component("item-filter-list", {
+
+    delimiters: ["${", "}"],
+
+    props: {
+        template: {
+            type: String,
+            default: "#vue-item-filter-list"
+        },
+        facetData: {
+            type: Array,
+            default: function _default() {
+                return [];
+            }
+        }
+    },
+
+    data: function data() {
+        return {
+            initialSelectedFacets: [],
+            isActive: false
+        };
+    },
+
+
+    computed: _extends({
+        isInitialFacetSelectionActive: function isInitialFacetSelectionActive() {
+            var _this = this;
+
+            var selectedFacetIds = this.selectedFacets.map(function (facet) {
+                return facet.id;
+            });
+
+            if (this.initialSelectedFacets.length === selectedFacetIds.length) {
+                var _iteratorNormalCompletion = true;
+                var _didIteratorError = false;
+                var _iteratorError = undefined;
+
+                try {
+                    var _loop = function _loop() {
+                        var selectedFacetId = _step.value;
+
+                        if (!_this.initialSelectedFacets.find(function (initialFacetId) {
+                            return initialFacetId === selectedFacetId;
+                        })) {
+                            return {
+                                v: false
+                            };
+                        }
+                    };
+
+                    for (var _iterator = selectedFacetIds[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                        var _ret = _loop();
+
+                        if ((typeof _ret === "undefined" ? "undefined" : _typeof(_ret)) === "object") return _ret.v;
+                    }
+                } catch (err) {
+                    _didIteratorError = true;
+                    _iteratorError = err;
+                } finally {
+                    try {
+                        if (!_iteratorNormalCompletion && _iterator.return) {
+                            _iterator.return();
+                        }
+                    } finally {
+                        if (_didIteratorError) {
+                            throw _iteratorError;
+                        }
+                    }
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+    }, Vuex.mapState({
+        facets: function facets(state) {
+            return state.itemList.facets.sort(function (facetA, facetB) {
+                if (facetA.position > facetB.position) {
+                    return 1;
+                }
+                if (facetA.position < facetB.position) {
+                    return -1;
+                }
+
+                return 0;
+            });
+        },
+
+        isLoading: function isLoading(state) {
+            return state.itemList.isLoading;
+        },
+        selectedFacets: function selectedFacets(state) {
+            return state.itemList.selectedFacets;
+        }
+    })),
+
+    created: function created() {
+        this.$store.commit("setFacets", this.facetData);
+
+        this.$options.template = this.template;
+
+        var urlParams = _UrlService2.default.getUrlParams(document.location.search);
+
+        var selectedFacets = [];
+
+        if (urlParams.facets) {
+            selectedFacets = urlParams.facets.split(",");
+        }
+
+        if (urlParams.priceMin || urlParams.priceMax) {
+            var priceMin = urlParams.priceMin || "";
+            var priceMax = urlParams.priceMax || "";
+
+            this.$store.commit("setPriceFacet", { priceMin: priceMin, priceMax: priceMax });
+
+            selectedFacets.push("price");
+        }
+
+        if (selectedFacets.length > 0) {
+            this.$store.commit("setSelectedFacetsByIds", selectedFacets);
+        }
+
+        this.initialSelectedFacets = selectedFacets;
+    },
+
+
+    methods: {
+        toggleOpeningState: function toggleOpeningState() {
+            var _this2 = this;
+
+            window.setTimeout(function () {
+                if (_this2.isActive && !_this2.isInitialFacetSelectionActive) {
+                    _this2.$store.dispatch("loadItemList");
+                }
+
+                _this2.isActive = !_this2.isActive;
+            }, 300);
+        },
+        resetAllSelectedFacets: function resetAllSelectedFacets() {
+            this.$store.commit("resetAllSelectedFacets");
+            this.$store.dispatch("loadItemList");
+        }
+    }
+});
+
+},{"services/UrlService":251}],185:[function(require,module,exports){
+"use strict";
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+var _UrlService = require("services/UrlService");
+
+var _UrlService2 = _interopRequireDefault(_UrlService);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+Vue.component("item-filter-price", {
+
+    delimiters: ["${", "}"],
+
+    props: {
+        template: {
+            type: String,
+            default: "#vue-item-filter-price"
+        }
+    },
+
+    data: function data() {
+        return {
+            priceMin: "",
+            priceMax: "",
+            currency: App.activeCurrency
+        };
+    },
+    created: function created() {
+        this.$options.template = this.template || "#vue-item-filter-price";
+
+        var urlParams = _UrlService2.default.getUrlParams(document.location.search);
+
+        this.priceMin = urlParams.priceMin || "";
+        this.priceMax = urlParams.priceMax || "";
+    },
+
+
+    computed: _extends({
+        isDisabled: function isDisabled() {
+            return this.priceMin === "" && this.priceMax === "" || parseInt(this.priceMin) >= parseInt(this.priceMax) || this.isLoading;
+        }
+    }, Vuex.mapState({
+        isLoading: function isLoading(state) {
+            return state.itemList.isLoading;
+        }
+    })),
+
+    methods: {
+        selectAll: function selectAll(event) {
+            event.target.select();
+        },
+        triggerFilter: function triggerFilter() {
+            if (!this.isDisabled) {
+                // TODO reload
+                this.$store.dispatch("selectPriceFacet", { priceMin: this.priceMin, priceMax: this.priceMax });
+            }
+        }
+    }
+});
+
+},{"services/UrlService":251}],186:[function(require,module,exports){
+"use strict";
+
+Vue.component("item-filter-tag-list", {
+
+    delimiters: ["${", "}"],
+
+    props: ["template"],
+
+    computed: Vuex.mapState({
+        tagList: function tagList(state) {
+            return state.itemList.selectedFacets;
+        }
+    }),
+
+    created: function created() {
+        this.$options.template = this.template || "#vue-item-filter-tag-list";
+    },
+
+
+    methods: {
+        removeTag: function removeTag(tag) {
+            this.$store.dispatch("selectFacet", { facetValue: tag });
+        }
+    }
+});
+
+},{}],187:[function(require,module,exports){
 "use strict";
 
 var _TranslationService = require("services/TranslationService");
@@ -28489,6 +28556,10 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 
+var _ApiService = require("services/ApiService");
+
+var _ApiService2 = _interopRequireDefault(_ApiService);
+
 var _ItemListUrlService = require("services/ItemListUrlService");
 
 var _UrlService = require("services/UrlService");
@@ -28606,6 +28677,9 @@ var mutations = {
             });
         }
     },
+    resetAllSelectedFacets: function resetAllSelectedFacets(state) {
+        state.selectedFacets = [];
+    },
     setItemListPage: function setItemListPage(state, page) {
         state.page = page;
     },
@@ -28630,11 +28704,41 @@ var mutations = {
 };
 
 var actions = {
-    selectFacet: function selectFacet(_ref2, _ref3) {
-        var dispatch = _ref2.dispatch,
-            commit = _ref2.commit;
-        var facetValue = _ref3.facetValue,
-            showFilter = _ref3.showFilter;
+    selectFacetNew: function selectFacetNew(_ref2, _ref3) {
+        var state = _ref2.state,
+            dispatch = _ref2.dispatch,
+            commit = _ref2.commit,
+            getters = _ref2.getters,
+            rootState = _ref2.rootState;
+        var facetValue = _ref3.facetValue;
+
+        commit("setIsItemListLoading", true);
+
+        if (facetValue.id === "price") {
+            commit("removePriceFacet");
+        } else {
+            commit("toggleSelectedFacet", facetValue);
+        }
+
+        var params = {
+            categoryId: rootState.navigation.currentCategory ? rootState.navigation.currentCategory.id : null,
+            facets: getters.selectedFacetIdsForUrl.toString(),
+            items: 0,
+            query: state.searchString,
+            template: "Ceres::ItemList.ItemListView"
+        };
+
+        var url = params.categoryId ? "/rest/io/category" : "/rest/io/item/search";
+
+        _ApiService2.default.get(url, params).done(function (data) {
+            commit("setFacets", data.facets);
+            commit("setIsItemListLoading", false);
+        }).fail(function (error) {});
+    },
+    selectFacet: function selectFacet(_ref4, _ref5) {
+        var dispatch = _ref4.dispatch,
+            commit = _ref4.commit;
+        var facetValue = _ref5.facetValue;
 
         if (facetValue.id === "price") {
             commit("removePriceFacet");
@@ -28644,58 +28748,49 @@ var actions = {
 
         commit("setItemListPage", 1);
 
-        if (showFilter) {
-            (0, _UrlService.setUrlParam)({ showFilter: null });
-        }
-
         dispatch("loadItemList");
     },
-    selectPriceFacet: function selectPriceFacet(_ref4, _ref5) {
-        var dispatch = _ref4.dispatch,
-            commit = _ref4.commit;
-        var priceMin = _ref5.priceMin,
-            priceMax = _ref5.priceMax,
-            showFilter = _ref5.showFilter;
+    selectPriceFacet: function selectPriceFacet(_ref6, _ref7) {
+        var dispatch = _ref6.dispatch,
+            commit = _ref6.commit;
+        var priceMin = _ref7.priceMin,
+            priceMax = _ref7.priceMax;
 
         commit("setPriceFacet", { priceMin: priceMin, priceMax: priceMax });
         commit("setPriceFacetTag");
         commit("setItemListPage", 1);
 
-        if (showFilter) {
-            (0, _UrlService.setUrlParam)({ showFilter: null });
-        }
-
         dispatch("loadItemList");
     },
-    selectItemListPage: function selectItemListPage(_ref6, page) {
-        var dispatch = _ref6.dispatch,
-            commit = _ref6.commit;
+    selectItemListPage: function selectItemListPage(_ref8, page) {
+        var dispatch = _ref8.dispatch,
+            commit = _ref8.commit;
 
         commit("setItemListPage", page);
 
         dispatch("loadItemList");
     },
-    selectItemListSorting: function selectItemListSorting(_ref7, sorting) {
-        var dispatch = _ref7.dispatch,
-            commit = _ref7.commit;
+    selectItemListSorting: function selectItemListSorting(_ref9, sorting) {
+        var dispatch = _ref9.dispatch,
+            commit = _ref9.commit;
 
         commit("setItemListSorting", sorting);
         commit("setItemListPage", 1);
 
         dispatch("loadItemList");
     },
-    selectItemsPerPage: function selectItemsPerPage(_ref8, itemsPerPage) {
-        var dispatch = _ref8.dispatch,
-            commit = _ref8.commit;
+    selectItemsPerPage: function selectItemsPerPage(_ref10, itemsPerPage) {
+        var dispatch = _ref10.dispatch,
+            commit = _ref10.commit;
 
         commit("setItemsPerPage", itemsPerPage);
         commit("setItemListPage", 1);
 
         dispatch("loadItemList");
     },
-    searchItems: function searchItems(_ref9, searchString) {
-        var dispatch = _ref9.dispatch,
-            commit = _ref9.commit;
+    searchItems: function searchItems(_ref11, searchString) {
+        var dispatch = _ref11.dispatch,
+            commit = _ref11.commit;
 
         commit("setItemListSearchString", searchString);
         commit("setItemListPage", 1);
@@ -28703,10 +28798,10 @@ var actions = {
 
         dispatch("loadItemList");
     },
-    loadItemList: function loadItemList(_ref10) {
-        var state = _ref10.state,
-            commit = _ref10.commit,
-            getters = _ref10.getters;
+    loadItemList: function loadItemList(_ref12) {
+        var state = _ref12.state,
+            commit = _ref12.commit,
+            getters = _ref12.getters;
 
         var selectedPriceFacet = state.selectedFacets.find(function (facet) {
             return facet.id === "price";
@@ -28756,7 +28851,7 @@ exports.default = {
     getters: getters
 };
 
-},{"services/ItemListUrlService":247,"services/TranslationService":250,"services/UrlService":251}],259:[function(require,module,exports){
+},{"services/ApiService":245,"services/ItemListUrlService":247,"services/TranslationService":250,"services/UrlService":251}],259:[function(require,module,exports){
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29622,7 +29717,7 @@ exports.default = function (store) {
 var NotificationService = require("services/NotificationService");
 var cloneDeep = require("lodash/cloneDeep");
 
-},{"lodash/cloneDeep":108,"services/NotificationService":249}]},{},[243,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,162,163,164,165,166,159,160,161,176,177,178,179,180,181,182,183,184,185,186,167,168,172,173,174,175,169,170,171,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,237,238,236,239,240,241,242,254,255,256,257,258,259,260,261,262,263,264,265,266])
+},{"lodash/cloneDeep":108,"services/NotificationService":249}]},{},[243,133,134,135,136,137,138,139,140,141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,162,163,164,165,166,159,160,161,167,168,169,170,171,172,173,174,175,176,177,178,179,183,184,185,186,180,181,182,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,226,227,228,229,230,231,232,233,234,235,237,238,236,239,240,241,242,254,255,256,257,258,259,260,261,262,263,264,265,266])
 
 
 

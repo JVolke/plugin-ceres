@@ -1,5 +1,6 @@
+import ApiService from "services/ApiService";
 import {getItemListUrlParams}from "services/ItemListUrlService";
-import {navigateToParams, setUrlParam}from "services/UrlService";
+import {navigateToParams}from "services/UrlService";
 import TranslationService from "services/TranslationService";
 
 const state =
@@ -101,6 +102,11 @@ const mutations =
             }
         },
 
+        resetAllSelectedFacets(state)
+        {
+            state.selectedFacets = [];
+        },
+
         setItemListPage(state, page)
         {
             state.page = page;
@@ -139,7 +145,41 @@ const mutations =
 
 const actions =
     {
-        selectFacet({dispatch, commit}, {facetValue, showFilter})
+        selectFacetNew({state, dispatch, commit, getters, rootState}, {facetValue})
+        {
+            commit("setIsItemListLoading", true);
+
+            if (facetValue.id === "price")
+            {
+                commit("removePriceFacet");
+            }
+            else
+            {
+                commit("toggleSelectedFacet", facetValue);
+            }
+
+            const params = {
+                categoryId: rootState.navigation.currentCategory ? rootState.navigation.currentCategory.id : null,
+                facets:     getters.selectedFacetIdsForUrl.toString(),
+                items:      0,
+                query:      state.searchString,
+                template:   "Ceres::ItemList.ItemListView"
+            };
+
+            const url = params.categoryId ? "/rest/io/category" : "/rest/io/item/search";
+
+            ApiService.get(url, params)
+                .done(data =>
+                {
+                    commit("setFacets", data.facets);
+                    commit("setIsItemListLoading", false);
+                })
+                .fail(error =>
+                {
+                });
+        },
+
+        selectFacet({dispatch, commit}, {facetValue})
         {
             if (facetValue.id === "price")
             {
@@ -152,24 +192,14 @@ const actions =
 
             commit("setItemListPage", 1);
 
-            if (showFilter)
-            {
-                setUrlParam({showFilter: null});
-            }
-
             dispatch("loadItemList");
         },
 
-        selectPriceFacet({dispatch, commit}, {priceMin, priceMax, showFilter})
+        selectPriceFacet({dispatch, commit}, {priceMin, priceMax})
         {
             commit("setPriceFacet", {priceMin: priceMin, priceMax: priceMax});
             commit("setPriceFacetTag");
             commit("setItemListPage", 1);
-
-            if (showFilter)
-            {
-                setUrlParam({showFilter: null});
-            }
 
             dispatch("loadItemList");
         },

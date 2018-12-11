@@ -3,20 +3,31 @@
         {{ component( "Ceres::ItemList.Components.Filter.ItemFilter") }}
         {{ component( "Ceres::ItemList.Components.Filter.ItemFilterPrice") }}
 
-        <a class="btn btn-link filter-toggle" data-toggle="collapse" href="#filterCollapse" aria-controls="filterCollapse" @click="toggleOpeningState()">
-            <i class="fa fa-sliders default-float" aria-hidden="true"></i> {{ trans("Ceres::Template.itemFilter") }}
-        </a>
+        <div class="filter-controls">
+            <a class="btn btn-link filter-reset-all" v-if="initialSelectedFacets.length" @click="resetAllSelectedFacets()">
+                <i class="fa fa-times default-float" aria-hidden="true"></i>
+                <span>{{ trans("Ceres::Template.itemFilterReset") }}</span>
+            </a>
+
+            <a class="btn btn-link filter-toggle" data-toggle="collapse" href="#filterCollapse" aria-controls="filterCollapse" @click="toggleOpeningState()">
+                <i class="fa fa-sliders default-float" aria-hidden="true"></i>
+                <span v-if="isInitialFacetSelectionActive">{{ trans("Ceres::Template.itemFilter") }}</span>
+                <span v-else>{{ trans("Ceres::Template.itemFilterApply") }}</span>
+            </a>
+        </div>
 
         <div class="collapse" :class="{in: isActive}" id="filterCollapse">
-            <div class="container-max page-content">
+            <div class="container-max page-content component-loading with-icon refreshing" :class="{ 'isLoading': isLoading }">
                 <div class="card-columns">
                     <item-filter v-for="facet in facets" :facet="facet" :key="facet.id"></item-filter>
                 </div>
 
                 <div class="row">
                     <div class="col-xs-12 text-xs-right">
-                        <button type="button" class="btn btn-primary btn-medium" data-toggle="collapse" href="#filterCollapse" aria-controls="filterCollapse" @click="toggleOpeningState()">
-                            <i class="fa fa-times" aria-hidden="true"></i> {{ trans("Ceres::Template.itemClose") }}
+                        <button type="button" class="btn btn-primary btn-medium-large" data-toggle="collapse" href="#filterCollapse" aria-controls="filterCollapse" @click="toggleOpeningState()">
+                            <i :class="{ 'fa-times': isInitialFacetSelectionActive, 'fa-check': !isInitialFacetSelectionActive }" class="fa" aria-hidden="true"></i>
+                            <span v-if="isInitialFacetSelectionActive">{{ trans("Ceres::Template.itemClose") }}&nbsp;</span>
+                            <span v-else>{{ trans("Ceres::Template.itemFilterApply") }}&nbsp;</span>
                         </button>
                     </div>
                 </div>

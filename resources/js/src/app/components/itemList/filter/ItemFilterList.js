@@ -21,28 +21,54 @@ Vue.component("item-filter-list", {
     data()
     {
         return {
+            initialSelectedFacets: [],
             isActive: false
         };
     },
 
-    computed: Vuex.mapState({
-        facets(state)
+    computed:
+    {
+        isInitialFacetSelectionActive()
         {
-            return state.itemList.facets.sort((facetA, facetB) =>
+            const selectedFacetIds = this.selectedFacets.map(facet => facet.id);
+
+            if (this.initialSelectedFacets.length === selectedFacetIds.length)
             {
-                if (facetA.position > facetB.position)
+                for (const selectedFacetId of selectedFacetIds)
                 {
-                    return 1;
-                }
-                if (facetA.position < facetB.position)
-                {
-                    return -1;
+                    if (!this.initialSelectedFacets.find(initialFacetId => initialFacetId === selectedFacetId))
+                    {
+                        return false;
+                    }
                 }
 
-                return 0;
-            });
-        }
-    }),
+                return true;
+            }
+
+            return false;
+        },
+
+        ...Vuex.mapState({
+            facets(state)
+            {
+                return state.itemList.facets.sort((facetA, facetB) =>
+                {
+                    if (facetA.position > facetB.position)
+                    {
+                        return 1;
+                    }
+                    if (facetA.position < facetB.position)
+                    {
+                        return -1;
+                    }
+
+                    return 0;
+                });
+            },
+            isLoading: state => state.itemList.isLoading,
+            selectedFacets: state => state.itemList.selectedFacets
+        })
+    },
 
     created()
     {
@@ -59,18 +85,12 @@ Vue.component("item-filter-list", {
             selectedFacets = urlParams.facets.split(",");
         }
 
-        if ("showFilter" in urlParams)
-        {
-            this.isActive = true;
-            UrlService.removeUrlParam("showFilter");
-        }
-
         if (urlParams.priceMin || urlParams.priceMax)
         {
             const priceMin = urlParams.priceMin || "";
             const priceMax = urlParams.priceMax || "";
 
-            this.$store.commit("setPriceFacet", {priceMin: priceMin, priceMax: priceMax, showFilter: true});
+            this.$store.commit("setPriceFacet", {priceMin: priceMin, priceMax: priceMax});
 
             selectedFacets.push("price");
         }
@@ -79,6 +99,8 @@ Vue.component("item-filter-list", {
         {
             this.$store.commit("setSelectedFacetsByIds", selectedFacets);
         }
+
+        this.initialSelectedFacets = selectedFacets;
     },
 
     methods:
@@ -87,8 +109,19 @@ Vue.component("item-filter-list", {
         {
             window.setTimeout(() =>
             {
+                if (this.isActive && !this.isInitialFacetSelectionActive)
+                {
+                    this.$store.dispatch("loadItemList");
+                }
+
                 this.isActive = !this.isActive;
             }, 300);
+        },
+
+        resetAllSelectedFacets()
+        {
+            this.$store.commit("resetAllSelectedFacets");
+            this.$store.dispatch("loadItemList");
         }
     }
 });
