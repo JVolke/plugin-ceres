@@ -29104,7 +29104,7 @@ var mutations = {
         state.sorting = sorting;
     },
     setItemsPerPage: function setItemsPerPage(state, itemsPerPage) {
-        state.itemsPerPage = itemsPerPage;
+        state.itemsPerPage = parseInt(itemsPerPage);
     },
     setIsItemListLoading: function setIsItemListLoading(state, isLoading) {
         state.isLoading = isLoading;
@@ -29223,7 +29223,7 @@ var actions = {
         });
         var searchParams = {
             query: state.searchString,
-            items: state.itemsPerPage,
+            items: parseInt(state.itemsPerPage),
             sorting: state.sorting,
             page: state.page,
             facets: getters.selectedFacetIdsForUrl.toString(),
