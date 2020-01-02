@@ -19992,6 +19992,16 @@ html.ie .v-s-boxes .v-s-box.invalid {
         }
     }
 }
+
+.widget-none {
+    .widget-filter-price {
+        .btn-appearance {
+            color: $gray-700;
+            background-color: rgba(0,0,0,0.15);
+            border-color: rgba(0,0,0,0.15);
+        }
+    }
+}
 .widget-selected-filter
 {
     &.widget-alignment-left {
@@ -20038,6 +20048,16 @@ html.ie .v-s-boxes .v-s-box.invalid {
             background: $white;
             border: 1px solid $gray-lighter2;
             padding: 2rem;
+        }
+    }
+
+    .collapse-container:empty {
+        &:after {
+            content: attr(data-translation-empty);
+            display: block;
+            padding: .75rem;
+            color: $gray-dark;
+            text-align: center;
         }
     }
 }
