@@ -164,10 +164,10 @@ export default Vue.component("live-shopping-details", {
             seconds = seconds - (minutes * 60);
 
             return {
-                days: days,
-                hours: hours,
-                minutes: minutes,
-                seconds: seconds
+                days: Math.floor(duration.asDays()),
+                hours: duration.hours(),
+                minutes: duration.minutes(),
+                seconds: duration.seconds()
             };
         }
     },
