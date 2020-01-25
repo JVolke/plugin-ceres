@@ -7412,7 +7412,7 @@ a.text-primary:hover, a.color-primary:hover, a.text-primary:focus, a.color-prima
 a.text-secondary:hover, a.color-secondary:hover, a.text-secondary:focus, a.color-secondary:focus {
   color: #880113 !important; }
 
-.text-success, .color-success {
+.text-success, .order-property-slider .form-check input:checked + label, .color-success {
   color: #28a745 !important; }
 
 a.text-success:hover, a.color-success:hover, a.text-success:focus, a.color-success:focus {
@@ -11911,8 +11911,11 @@ a.text-dark:hover, a.color-dark:hover, a.text-dark:focus, a.color-dark:focus {
   .text-context-light:hover {
     color: #fff !important; }
 
-body, body .wrapper-main {
+body {
   overflow-x: hidden; }
+
+.wrapper-main {
+  overflow: hidden; }
 
 .sb-no-animation.collapsing {
   -webkit-transition: none !important;
@@ -18637,6 +18640,12 @@ html.ie .v-s-boxes .v-s-box.invalid:after {
           justify-content: center;
   min-height: 75px;
   cursor: pointer; }
+  .widget-step-by-step-navigation .nav-item.preview svg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    display: block !important;
+    fill: #f7f7f9; }
 
 .widget-step-by-step-navigation .nav-text {
   background-color: #f4f4f4;

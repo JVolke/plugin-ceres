@@ -11050,8 +11050,11 @@ $flag-icon-square-path: '/1x1' !default;
 		color: $yiq-text-light !important;
 	}
 }
-body, body .wrapper-main{
+body {
     overflow-x: hidden;
+}
+.wrapper-main {
+    overflow: hidden;
 }
 
 .sb-no-animation.collapsing {
@@ -19414,6 +19417,11 @@ html.crios {
             }
         }
     }
+
+    .form-check input:checked + label
+    {
+        @extend .text-success;
+    }
 }
 
 .add-to-basket-container {
@@ -20012,6 +20020,14 @@ html.ie .v-s-boxes .v-s-box.invalid {
                 justify-content: center;
         min-height: 75px;
         cursor: pointer;
+
+        &.preview svg {
+            position: absolute;
+            left: 0;
+            right: 0;
+            display: block !important;
+            fill: $gray-lightest;
+        }
     }
     
     .nav-text {
