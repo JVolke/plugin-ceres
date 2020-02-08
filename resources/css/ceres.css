@@ -13287,15 +13287,6 @@ html.ie .single-carousel .owl-item img {
 html.ie .single-carousel .owl-item > div {
   text-align: center; }
 
-html.ie #thumb-carousel .owl-stage {
-  display: -webkit-box;
-  display: flex; }
-  html.ie #thumb-carousel .owl-stage .owl-item {
-    width: auto !important; }
-    html.ie #thumb-carousel .owl-stage .owl-item img {
-      width: auto;
-      margin-right: 0 !important; }
-
 .cmp-accordion .accordion-control {
   display: none; }
 
@@ -14509,10 +14500,6 @@ html.ie #thumb-carousel .owl-stage {
 
 html.ie .always-visible-search {
   min-height: 32px; }
-
-html.ie .navbar-brand img[src*="svg"] {
-  width: 100%;
-  height: 100%; }
 
 .top-bar .cmp-search-box {
   position: relative;
@@ -18721,25 +18708,29 @@ html.ie .v-s-boxes .v-s-box.invalid:after {
   bottom: 0;
   height: 100% !important; }
 
-.widget-background .container-max {
-  z-index: 1; }
-  .widget-background .container-max .huge-font {
-    font-size: 35px; }
-    .widget-background .container-max .huge-font .widget-text h1,
-    .widget-background .container-max .huge-font .widget-code h1 {
-      font-size: 2em; }
-    .widget-background .container-max .huge-font .widget-text h2,
-    .widget-background .container-max .huge-font .widget-code h2 {
-      font-size: 1.8em; }
-    .widget-background .container-max .huge-font .widget-text h3,
-    .widget-background .container-max .huge-font .widget-code h3 {
-      font-size: 1.5em; }
-    .widget-background .container-max .huge-font .widget-text h4,
-    .widget-background .container-max .huge-font .widget-code h4 {
-      font-size: 1.25em; }
-    .widget-background .container-max .huge-font .widget-text *,
-    .widget-background .container-max .huge-font .widget-code * {
-      font-size: 1em; }
+.widget-background .huge-font {
+  font-size: 1rem; }
+  @media (min-width: 576px) {
+    .widget-background .huge-font {
+      font-size: 28px; } }
+  @media (min-width: 768px) {
+    .widget-background .huge-font {
+      font-size: 35px; } }
+  .widget-background .huge-font .widget-text h1,
+  .widget-background .huge-font .widget-code h1 {
+    font-size: 2em; }
+  .widget-background .huge-font .widget-text h2,
+  .widget-background .huge-font .widget-code h2 {
+    font-size: 1.8em; }
+  .widget-background .huge-font .widget-text h3,
+  .widget-background .huge-font .widget-code h3 {
+    font-size: 1.5em; }
+  .widget-background .huge-font .widget-text h4,
+  .widget-background .huge-font .widget-code h4 {
+    font-size: 1.25em; }
+  .widget-background .huge-font .widget-text *,
+  .widget-background .huge-font .widget-code * {
+    font-size: 1em; }
 
 .widget.accordion div.card:first-of-type, .widget.accordion .cmp-address-list .items > div:first-of-type:first-child, .cmp-address-list .widget.accordion .items > div:first-of-type:first-child {
   border-bottom: 1px solid rgba(0, 0, 0, 0.125); }

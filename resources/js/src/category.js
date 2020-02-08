@@ -1,3 +1,4 @@
+import "./app/publicPath";
 // =========================
 // Polyfill's
 // =========================
@@ -10,6 +11,42 @@ import "custom-event-polyfill";
 
 import Vue from "vue";
 import Vuex from "vuex";
+
+const mount = Vue.prototype.$mount;
+const dataComponentElements = [].slice.call(document.querySelectorAll("script[data-component], template[data-component]"));
+const overriddenComponents = dataComponentElements.reduce(
+    (obj, el) =>
+    {
+        return {
+            ...obj,
+            [el.dataset.component]: el
+        };
+    }, {});
+
+Vue.prototype.$mount =
+    function(el, hydrating)
+    {
+        let compHtml = null;
+        const templateOverride = this.$props.templateOverride;
+
+        if (this.$props.templateOverride)
+        {
+            compHtml = document.querySelector(templateOverride).innerHTML;
+        }
+        else if (overriddenComponents && overriddenComponents[this.$options._componentTag])
+        {
+            compHtml = overriddenComponents[this.$options._componentTag].innerHTML;
+        }
+
+        if (compHtml)
+        {
+            const renderFunctions = Vue.compile(compHtml);
+
+            Object.assign(this.$options, renderFunctions);
+        }
+
+        return mount.call(this, el, hydrating);
+    };
 
 window.Vue = Vue;
 window.Vuex = Vuex;
@@ -25,67 +62,73 @@ import "bootstrap";
 // =========================
 // COMPONENTS
 // =========================
+Vue.component("add-item-to-basket-overlay", () => import("./app/components/basket/AddItemToBasketOverlay.vue"));
 
-import "./app/components/basket/AddItemToBasketOverlay";
-import "./app/components/basket/AddToBasket";
-import "./app/components/basket/BasketPreview";
-import "./app/components/basket/BasketTotals";
-import "./app/components/basket/Coupon";
-import "./app/components/basket/list/BasketList";
+Vue.component("add-to-basket", () => import("./app/components/basket/AddToBasket.vue"));
+Vue.component("basket-preview", () => import("./app/components/basket/BasketPreview.vue"));
+Vue.component("basket-totals", () => import("./app/components/basket/BasketTotals.vue"));
+Vue.component("coupon", () => import("./app/components/basket/Coupon.vue"));
+Vue.component("basket-list", () => import("./app/components/basket/list/BasketList.vue"));
 
-import "./app/components/common/GoogleMaps";
-import "./app/components/common/TabList";
+Vue.component("step-by-step-navigation", () => import("./app/components/category/StepByStepNavigation.vue"));
+Vue.component("google-maps-widget", () => import("./app/components/common/GoogleMaps.vue"));
+import LazyImg from "./app/components/common/LazyImg.vue";
+Vue.component("lazy-img", LazyImg);
+import Intersect from "./app/components/common/Intersect.vue";
+Vue.component("intersect", Intersect);
+Vue.component("tab-list", () => import("./app/components/common/TabList.vue"));
+Vue.component("last-seen-item-list", () => import("./app/components/containers/LastSeenItemList.vue"));
 
-import "./app/components/containers/LastSeenItemList";
-
-import "./app/components/customer/AcceptPrivacyPolicyCheck";
-import "./app/components/customer/ChangeEmailForm";
-import "./app/components/customer/ContactMap";
-import "./app/components/customer/CountrySelect";
-import "./app/components/customer/ReCaptcha";
-import "./app/components/customer/Registration";
-import "./app/components/customer/ResetPasswordForm";
-
-import "./app/components/customer/login/ForgotPassword";
-import "./app/components/customer/login/GuestLogin";
-import "./app/components/customer/login/Login";
+Vue.component("change-email-form", () => import("./app/components/customer/ChangeEmailForm.vue"));
+import ReCaptcha from "./app/components/customer/ReCaptcha.vue";
+Vue.component("recaptcha", ReCaptcha);
+Vue.component("registration", () => import("./app/components/customer/Registration.vue"));
+Vue.component("reset-password-form", () => import("./app/components/customer/ResetPasswordForm.vue"));
+Vue.component("forgot-password-modal", () => import("./app/components/customer/login/ForgotPassword.vue"));
+Vue.component("guest-login", () => import("./app/components/customer/login/GuestLogin.vue"));
+Vue.component("login", () => import("./app/components/customer/login/Login.vue"));
 // legacy non-shopbuilder component
-import "./app/components/customer/login/LoginView";
-import "./app/components/customer/login/UserLoginHandler";
+Vue.component("login-view", () => import("./app/components/customer/login/LoginView.vue"));
+import UserLoginHandler from "./app/components/customer/login/UserLoginHandler.vue";
+Vue.component("user-login-handler", UserLoginHandler);
 
+Vue.component("item-bundle", () => import("./app/components/item/ItemBundle.vue"));
+Vue.component("order-property-value", () => import("./app/components/item/OrderPropertyValue.vue"));
+Vue.component("quantity-input", () => import("./app/components/item/QuantityInput.vue"));
 
-import "./app/components/item/ItemBundle";
+Vue.component("tag-list", () => import("./app/components/item/TagList.vue"));
 
-import "./app/components/item/OrderPropertyValue";
-import "./app/components/item/QuantityInput";
+Vue.component("category-item", () => import("./app/components/itemList/CategoryItem.vue"));
+import ItemSearch from "./app/components/itemList/ItemSearch.vue";
+Vue.component("item-search", ItemSearch);
+Vue.component("item-filter-list", () => import("./app/components/itemList/filter/ItemFilterList.vue"));
+Vue.component("item-filter-tag-list", () => import("./app/components/itemList/filter/ItemFilterTagList.vue"));
 
-import "./app/components/itemList/CategoryImageCarousel";
-import "./app/components/itemList/CategoryItem";
-import "./app/components/itemList/ItemLazyImg";
-import "./app/components/itemList/ItemSearch";
-import "./app/components/itemList/ItemStoreSpecial";
-import "./app/components/itemList/filter/ItemFilter";
+Vue.component("live-shopping-item", () => import("./app/components/liveShopping/LiveShoppingItem.vue"));
 
-import "./app/components/itemList/filter/ItemFilterList";
-import "./app/components/itemList/filter/ItemFilterTagList";
+Vue.component("newsletter-input", () => import("./app/components/newsletter/NewsletterInput.vue"));
+Vue.component("newsletter-unsubscribe-input", () => import("./app/components/newsletter/NewsletterUnsubscribeInput.vue"));
 
-import "./app/components/liveShopping/LiveShoppingItem";
+Vue.component("order-return", () => import("./app/components/orderReturn/OrderReturn.vue"));
 
-import "./app/components/newsletter/NewsletterInput";
-import "./app/components/newsletter/NewsletterUnsubscribeInput";
+Vue.component("cookie-bar", () => import("./app/components/pageDesign/CookieBar.vue"));
+Vue.component("privacy-settings", () => import("./app/components/pageDesign/PrivacySettings.vue"));
+Vue.component("carousel", () => import("./app/components/pageDesign/Carousel.vue"));
+import Icon from "./app/components/pageDesign/Icon.vue";
+Vue.component("icon", Icon);
+import MobileNavigation from "./app/components/pageDesign/MobileNavigation.vue";
+Vue.component("mobile-navigation", MobileNavigation);
+import Notifications from "./app/components/pageDesign/Notifications.vue";
+Vue.component("notifications", Notifications);
+Vue.component("popper", () => import("./app/components/pageDesign/Popper.vue"));
+Vue.component("shipping-country-select", () => import("./app/components/pageDesign/ShippingCountrySelect.vue"));
 
-import "./app/components/orderReturn/OrderReturn";
+Vue.component("wish-list", () => import("./app/components/wishList/WishList.vue"));
+import WishListCount from "./app/components/wishList/WishListCount.vue";
+Vue.component("wish-list-count", WishListCount);
 
-import "./app/components/pageDesign/Carousel";
-import "./app/components/pageDesign/CookieBar";
-import "./app/components/pageDesign/PrivacySettings";
-import "./app/components/pageDesign/MobileNavigation";
-import "./app/components/pageDesign/Notifications";
-import "./app/components/pageDesign/Popper";
-import "./app/components/pageDesign/ShippingCountrySelect";
-
-import "./app/components/wishList/WishList";
-import "./app/components/wishList/WishListCount";
+import LazyLoad from "./app/components/common/LazyLoad.vue";
+Vue.component("lazy-load", LazyLoad);
 
 // =========================
 // DIRECTIVES
@@ -106,9 +149,9 @@ import "./app/directives/helper/waitingAnimationInfinite";
 import "./app/directives/navigation/navigationTouchHandler";
 import "./app/directives/navigation/openMobileNavigation";
 
-import "./app/directives/pageDesign/ieObjectfitPolyfill";
 import "./app/directives/pageDesign/scrollToTop";
 import "./app/directives/pageDesign/stickInParent";
+import "./app/directives/navigation/sidenavigationChildrenLoader";
 import "./app/directives/pageDesign/tooltip";
 
 
@@ -144,12 +187,16 @@ import "./app/filters/truncate.filter";
 // =========================
 // MIXINS
 // =========================
-import "./app/mixins/buttonSizeProperty.mixin";
 import "./app/mixins/getJsonData.mixin";
 import "./app/mixins/template.mixin";
-
 
 // =========================
 // Bootstrap frameworks
 // =========================
 import "./app/main";
+
+import TranslationService from "./app/services/TranslationService";
+window.ceresTranslate = TranslationService.translate;
+
+Vue.prototype.$translate = TranslationService.translate;
+Vue.prototype.$ceres = App;

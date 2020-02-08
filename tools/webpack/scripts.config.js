@@ -1,4 +1,5 @@
 const path = require("path");
+const VueLoaderPlugin = require("vue-loader/lib/plugin");
 
 module.exports = env =>
 {
@@ -7,14 +8,14 @@ module.exports = env =>
         name: "scripts",
         mode: env.prod ? "production" : "development",
         entry: {
-            app: "./resources/js/src/index.js",
             category: "./resources/js/src/category.js",
             item: "./resources/js/src/item.js",
             checkout: "./resources/js/src/checkout.js"
         },
         output: {
-            filename: "../../../resources/js/dist/ceres-[name]" + (env.prod ? ".min" : "") + ".js",
-            path: path.resolve(__dirname, "dist")
+            filename: "ceres-[name]" + (env.prod ? ".min" : "") + ".js",
+            chunkFilename: "chunks/ceres-[name]"+ (env.prod ? ".min" : "") + ".js",
+            path: path.resolve(__dirname, "..", "..", "resources/js/dist/")
         },
         resolve: {
             alias: {
@@ -48,6 +49,10 @@ module.exports = env =>
                     ]
                 },
                 {
+                    test: /\.vue$/,
+                    loader: "vue-loader"
+                },
+                {
                     test: /\.m?js$/,
                     exclude: /node_modules/,
                     use: {
@@ -55,6 +60,11 @@ module.exports = env =>
                     }
                 }
             ]
-        }
+        },
+        plugins: [
+            new VueLoaderPlugin({
+                exposeFilename: true
+            })
+        ],
     };
 };

@@ -34,12 +34,12 @@
                     {% if itemData.prices.default.baseLot > 0 %}
                     "priceSpecification": {
                         "@type": "UnitPriceSpecification",
-                        "price": "{{ item.documents[0].data.prices.default.baseSinglePrice | number_format(2, '.', '') }}",
+                        "price": "{{ itemData.prices.default.price.value | number_format(2, '.', '') }}",
                         "priceCurrency": "{{ item.documents[0].data.prices.default.currency }}",
                         "referenceQuantity": {
                             "@type": "QuantitativeValue",
-                            "value": "{{ item.documents[0].data.prices.default.baseLot }}",
-                            "unitCode": "{{ item.documents[0].data.prices.default.baseUnit }}"
+                            "value": "{{ itemData.unit.content }}",
+                            "unitCode": "{{ itemData.unit.unitOfMeasurement }}"
                         }
                     },
                     {% endif %}
@@ -70,7 +70,6 @@
 
 {% block PageBody %}
     {{ set_item_data_base(item.documents[0].data) }}
-    {{ component("Ceres::Item.Components.SingleItem") }}
 
     {% set shopBuilderTemplate = "" %}
     {% set currentCategory = services.category.getCurrentCategory() %}
@@ -104,6 +103,8 @@
                         variations="{{ variations | json_data }}"
                         :please-select-option-variation-id="{{ dynamicVariationId }}"
                         :init-please-select-option="{{ initPleaseSelectOption | json_encode }}"
+                        :show-net-prices="{{ services.customer.showNetPrices() | json_encode }}"
+                        :is-wish-list-enabled="{{ services.url.isRouteEnabled("wish-list") | json_encode }}"
                         v-slot="slotProps">
                         {{ shopBuilderTemplate | raw }}
                     </single-item>
