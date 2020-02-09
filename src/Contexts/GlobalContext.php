@@ -124,6 +124,12 @@ class GlobalContext implements ContextInterface
             $customerService->getContactClassId()
         );
 
+        // Set a Session Value to if skipLogin is false
+        if (!$this->ceresConfig->skipCheckoutLogin)
+        {
+            $sessionStorageService->setSessionValue("skipLogin", false);
+        }
+
         $this->notifications = $notificationService->getNotifications();
 
         $this->basket = $basketService->getBasketForTemplate();

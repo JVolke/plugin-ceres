@@ -358,6 +358,13 @@
                 </div>
             </div>
 
+            <div class="col-12 col-sm-8">
+                <div class="input-unit" data-validate="mail" data-model="email">
+                    <input type="email" name="email" :id="'txtEmail' + _uid" :value="value.email" @input="emitInputEvent('email', $event.target.value)">
+                    <label :for="'txtEmail' + _uid">{{ $translate("Ceres::Template.loginEmail") }}</label>
+                </div>
+            </div>
+
             <slot name="custom-address-fields"></slot>
         </template>
         <!-- BillingAddressGB -->
@@ -549,6 +556,13 @@
                 <div class="input-unit" data-validate="text" data-model="postalCode">
                     <input type="text" name="zip" :id="'txtZip' + _uid" :value="value.postalCode"  @input="emitInputEvent('postalCode', $event.target.value)">
                     <label :for="'txtZip' + _uid">{{ $translate("Ceres::Template.addressZip") }}*</label>
+                </div>
+            </div>
+            
+            <div class="col-12 col-sm-8">
+                <div class="input-unit" data-validate="mail" data-model="email">
+                    <input type="email" name="email" :id="'txtEmail' + _uid" :value="value.email" @input="emitInputEvent('email', $event.target.value)">
+                    <label :for="'txtEmail' + _uid">{{ $translate("Ceres::Template.loginEmail") }}*</label>
                 </div>
             </div>
 

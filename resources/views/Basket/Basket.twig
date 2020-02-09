@@ -78,6 +78,12 @@
                     <hr>
 
                     {{ LayoutContainer.show("Ceres::Basket.BeforeCheckoutButton") }}
+
+                    {% set checkoutUrl = urls.login %}
+                    {% if ceresConfig.skipLogin %}
+                        {% set checkoutUrl = urls.checkout %}
+                    {% endif %}
+
                     <a v-waiting-animation-infinite class="btn btn-primary btn-block" href="{{ urls.checkout }}">
                         <i class="fa fa-arrow-right" aria-hidden="true"></i>
                         {{ trans("Ceres::Template.basketCheckout") }}
