@@ -15,6 +15,7 @@ use Ceres\Contexts\OrderReturnContext;
 use Ceres\Contexts\PasswordResetContext;
 use Ceres\Contexts\SingleItemContext;
 use Ceres\Contexts\TagSearchContext;
+use Ceres\Contexts\MyAccountContext;
 use Ceres\Extensions\TwigItemDataField;
 use Ceres\Extensions\TwigJsonDataContainer;
 use Ceres\Extensions\TwigLayoutContainerInternal;
