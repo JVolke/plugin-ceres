@@ -9,6 +9,7 @@ use Ceres\Contexts\ChangeMailContext;
 use Ceres\Contexts\CheckoutContext;
 use Ceres\Contexts\ContactContext;
 use Ceres\Contexts\GlobalContext;
+use Ceres\Contexts\MyAccountContext;
 use Ceres\Contexts\ItemSearchContext;
 use Ceres\Contexts\OrderConfirmationContext;
 use Ceres\Contexts\OrderReturnContext;
