@@ -16,8 +16,10 @@ class SingleItemContext extends GlobalContext implements ContextInterface
     public $variations;
     public $customerShowNetPrices;
     public $defaultCategory;
+    public $assetName = "ceres-item";
     public $dynamicVariationId;
     public $initPleaseSelectOption;
+    public $isItemSet;
 
     public function init($params)
     {
@@ -37,6 +39,8 @@ class SingleItemContext extends GlobalContext implements ContextInterface
         $availabiltyId = $itemData['variation']['availability']['id'];
         $mappedAvailability = $configRepository->get('Ceres.availability.mapping.availability' . $availabiltyId);
         $this->item['documents'][0]['data']['variation']['availability']['mappedAvailability'] = $mappedAvailability;
+
+        $this->isItemSet = $params['isItemSet'];
 
         $this->attributes = $params['variationAttributeMap']['attributes'];
         $this->variations = $params['variationAttributeMap']['variations'];

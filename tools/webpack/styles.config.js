@@ -9,10 +9,11 @@ module.exports = env =>
         name: "styles",
         mode: env.prod ? "production" : "development",
         entry: {
-            app: "./resources/scss/app.scss",
             category: "./resources/scss/category.scss",
             item: "./resources/scss/item.scss",
-            checkout: "./resources/scss/checkout.scss"
+            checkout: "./resources/scss/checkout.scss",
+            icons: "./resources/scss/icons.scss",
+            shopbuilder: "./resources/scss/shopbuilder.scss"
         },
         module: {
             rules: [
