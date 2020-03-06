@@ -94,7 +94,7 @@ trait ItemListContext
             "pageMax" => $this->pageMax,
             "itemsCountTotal" => $this->itemCountTotal,
             "itemsPerPage" => $options['itemsPerPage'],
-            "searchResult" => $searchResults
+            "searchResult" => $searchResults["itemList"]
         ]);
 
     }
