@@ -93,7 +93,8 @@ trait ItemListContext
         $this->getLogger(__CLASS__)->error("Data",[
             "pageMax" => $this->pageMax,
             "itemsCountTotal" => $this->itemCountTotal,
-            "itemsPerPage" => $options['itemsPerPage']
+            "itemsPerPage" => $options['itemsPerPage'],
+            "searchResult" => $searchResults
         ]);
 
     }
