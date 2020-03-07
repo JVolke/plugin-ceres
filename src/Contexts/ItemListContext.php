@@ -87,7 +87,7 @@ trait ItemListContext
         }
 
         $searchResults = $itemSearchService->getResults( $defaultSearchFactories );
-        $this->itemCountTotal   = count($searchResults['itemList']['documents']);
+        $this->itemCountTotal   = $searchResults['itemList']['total'];
         $this->itemCountTotal = $this->itemCountTotal >  10000 ? 10000 : $this->itemCountTotal;
         $this->searchResults = $searchResults;
         $this->pageMax          = ceil( $this->itemCountTotal / $options['itemsPerPage'] );
