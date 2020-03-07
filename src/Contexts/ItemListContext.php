@@ -22,6 +22,7 @@ trait ItemListContext
     public $itemCountTotal;
     public $itemSorting;
     public $query;
+    public $searchResults;
 
     public $itemList;
     public $facets;
@@ -84,7 +85,7 @@ trait ItemListContext
         $searchResults = $itemSearchService->getResults( $defaultSearchFactories );
         $this->itemCountTotal   = $searchResults['itemList']['total'];
         $this->itemCountTotal = $this->itemCountTotal >  10000 ? 10000 : $this->itemCountTotal;
-
+        $this->searchResults = $searchResults;
         $this->pageMax          = ceil( $this->itemCountTotal / $options['itemsPerPage'] );
         $this->itemCountPage    = count( $searchResults['itemList']['documents'] );
         $this->itemList         = $searchResults['itemList']['documents'];
