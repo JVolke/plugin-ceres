@@ -7,6 +7,7 @@ use Ceres\Helper\SearchOptions;
 
 //use IO\Services\ItemSearch\SearchPresets\VariationList;
 //use IO\Services\ItemSearch\Services\ItemSearchService;
+
 use Plenty\Modules\Webshop\ItemSearch\SearchPresets\VariationList;
 use Plenty\Modules\Webshop\ItemSearch\Services\ItemSearchService;
 
@@ -93,13 +94,5 @@ trait ItemListContext
         $this->itemCountPage    = count( $searchResults['itemList']['documents'] );
         $this->itemList         = $searchResults['itemList']['documents'];
         $this->facets           = $searchResults['facets'];
-
-        $this->getLogger(__CLASS__)->error("Data",[
-            "pageMax" => $this->pageMax,
-            "itemsCountTotal" => $this->itemCountTotal,
-            "itemsPerPage" => $options['itemsPerPage'],
-            "searchResult" => $searchResults["itemList"]
-        ]);
-
     }
 }
