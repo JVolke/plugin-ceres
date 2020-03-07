@@ -5,11 +5,11 @@ namespace Ceres\Contexts;
 use Ceres\Helper\ExternalSearch;
 use Ceres\Helper\SearchOptions;
 
-//use IO\Services\ItemSearch\SearchPresets\VariationList;
-//use IO\Services\ItemSearch\Services\ItemSearchService;
+use IO\Services\ItemSearch\SearchPresets\VariationList;
+use IO\Services\ItemSearch\Services\ItemSearchService;
 
-use Plenty\Modules\Webshop\ItemSearch\SearchPresets\VariationList;
-use Plenty\Modules\Webshop\ItemSearch\Services\ItemSearchService;
+//use Plenty\Modules\Webshop\ItemSearch\SearchPresets\VariationList;
+//use Plenty\Modules\Webshop\ItemSearch\Services\ItemSearchService;
 
 use Plenty\Plugin\Log\Loggable;
 
@@ -87,7 +87,7 @@ trait ItemListContext
         }
 
         $searchResults = $itemSearchService->getResults( $defaultSearchFactories );
-        $this->itemCountTotal   = $searchResults['itemList']['total'];
+        $this->itemCountTotal   = count($searchResults['itemList']['documents']);
         $this->itemCountTotal = $this->itemCountTotal >  10000 ? 10000 : $this->itemCountTotal;
         $this->searchResults = $searchResults;
         $this->pageMax          = ceil( $this->itemCountTotal / $options['itemsPerPage'] );
