@@ -161,6 +161,7 @@
                 "homepage.showShopBuilderContent": {
                     "type": "checkBox",
                     "required": false,
+                    "deprecated": true,
                     "label": "Config.homepageShowShopBuilderContentLabel",
                     "options": {
                         "defaultValue": "false"
@@ -169,6 +170,7 @@
                 "default.homepage": {
                     "type": "checkBox",
                     "required": false,
+                    "deprecated": true,
                     "label": "Config.defaultHomepageLabel",
                     "options": {
                         "defaultValue": "true"
@@ -782,6 +784,7 @@
                 "item.category_show_dots": {
                     "type": "checkBox",
                     "required": false,
+                    "deprecated": true,
                     "label": "Config.itemCategoryShowDotsLabel",
                     "options": {
                         "defaultValue": "true"
@@ -790,6 +793,7 @@
                 "item.category_show_nav": {
                     "type": "checkBox",
                     "required": false,
+                    "deprecated": true,
                     "label": "Config.itemCategoryShowNavLabel",
                     "options": {
                         "defaultValue": "false"
@@ -817,6 +821,7 @@
                 "item.show_category_image": {
                     "type": "checkBox",
                     "required": false,
+                    "deprecated": true,
                     "label": "Config.itemShowCategoryImageLabel",
                     "options": {
                         "defaultValue": "true"

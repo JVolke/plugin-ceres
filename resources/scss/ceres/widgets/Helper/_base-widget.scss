@@ -90,6 +90,7 @@
         margin-left: -15px;
     }
 }
+
 .widget .widget-fw {
     position: unset;
     right: unset !important; // stylelint-disable-line declaration-no-important
@@ -129,9 +130,12 @@ header .widget {
 
     @each $i in 1, 2, 3 {
         @each $j in 1, 2, 3 {
-            .widget-prop#{$infix}-#{$i}-#{$j} .widget-proportional,
-            .widget-proportional.widget-prop#{$infix}-#{$i}-#{$j} {
+            .widget-prop#{$infix}-#{$i}-#{$j} .widget-proportional {
                 @extend .prop#{$infix}-#{$i}-#{$j};
+            }
+
+            .widget-proportional.widget-prop#{$infix}-#{$i}-#{$j} {
+                padding-bottom: percentage($j / $i) !important; // stylelint-disable-line declaration-no-important
             }
         }
     }

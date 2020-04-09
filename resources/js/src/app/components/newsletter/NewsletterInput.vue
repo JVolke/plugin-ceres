@@ -1,30 +1,30 @@
 <template>
     <form :id="'newsletter-input-form_' + _uid" method="post" @submit.prevent="validateData">
         <div class="row">
-            <div class="col-xs-6" v-if="showNameInputs">
+            <div class="col-6" v-if="showNameInputs">
                 <div class="input-unit">
                     <label :for="'first-name-input_' + _uid">{{ $translate("Ceres::Template.newsletterFirstName") }}</label>
                     <input type="text" :id="'first-name-input_' + _uid" v-model="firstName">
                 </div>
             </div>
-            <div class="col-xs-6 pl-0" v-if="showNameInputs">
+            <div class="col-6 pl-0" v-if="showNameInputs">
                 <div class="input-unit">
                     <label :for="'last-name-input_' + _uid">{{ $translate("Ceres::Template.newsletterLastName") }}</label>
                     <input type="text" :id="'last-name-input_' + _uid" v-model="lastName">
                 </div>
             </div>
 
-            <div class="col-xs-12">
+            <div class="col-12">
                 <div class="input-group">
                     <div class="input-unit" data-validate="mail">
                         <label :for="'email-input-id_' + _uid">{{ $translate("Ceres::Template.newsletterEmail") }} *</label>
                         <input type="email" autocomplete="email" :id="'email-input-id_' + _uid" v-model="email">
                     </div>
-                    <input class="honey" type="text" name="username" autocomplete="off" tabindex="-1" v-model="honeypot">
+                    <input autocomplete="none" class="honey" type="text" name="username" tabindex="-1" v-model="honeypot">
                 </div>
             </div>
 
-            <div class="col-xs-12" v-if="showPrivacyPolicyCheckbox">
+            <div class="col-12" v-if="showPrivacyPolicyCheckbox">
                 <div class="form-check small" data-validate>
                     <input type="checkbox" class="form-check-input" :id="'privacy-policy-accept-id_' + _uid" name="privacy-policy-accept" v-model="privacyPolicyValue">
                     <label :for="'privacy-policy-accept-id_' + _uid" class="form-check-label" v-html="privacyPolicyText">
@@ -32,7 +32,7 @@
                 </div>
             </div>
 
-            <div class="col-xs-12 mt-3">
+            <div class="col-12 mt-3">
                 <div class="input-group-btn">
                     <button type="button" class="btn btn-block btn-primary btn-appearance" @click="validateData" :disabled="isDisabled" :class="buttonSizeClass">
                         <icon icon="paper-plane-o" :loading="isDisabled"></icon>
@@ -117,11 +117,20 @@ export default {
         save()
         {
             ApiService.post("/rest/io/customer/newsletter", { email: this.email, firstName: this.firstName, lastName: this.lastName, emailFolder: this.emailFolder, honeypot: this.honeypot })
-                .done(() =>
+                .done(data =>
                 {
-                    NotificationService.success(
-                        this.$translate("Ceres::Template.newsletterSuccessMessage")
-                    ).closeAfter(3000);
+                    if (!!data.containsHoneypot)
+                    {
+                        NotificationService.warn(
+                            this.$translate("Ceres::Template.newsletterHoneypotWarning")
+                        );
+                    }
+                    else
+                    {
+                        NotificationService.success(
+                            this.$translate("Ceres::Template.newsletterSuccessMessage")
+                        ).closeAfter(3000);
+                    }
                     this.resetInputs();
                 })
                 .fail(() =>
