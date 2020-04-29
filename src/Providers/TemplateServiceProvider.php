@@ -126,6 +126,7 @@ class TemplateServiceProvider extends ServiceProvider
             }
         );
 
+        /** @var ResultFieldTemplate $templateContainer */
         $templateContainer = pluginApp(ResultFieldTemplate::class);
 
         $templateContainer->setTemplates(
@@ -136,7 +137,8 @@ class TemplateServiceProvider extends ServiceProvider
                 ResultFieldTemplate::TEMPLATE_AUTOCOMPLETE_ITEM_LIST => 'Ceres::ResultFields.AutoCompleteListItem',
                 ResultFieldTemplate::TEMPLATE_CATEGORY_TREE => 'Ceres::ResultFields.CategoryTree',
                 ResultFieldTemplate::TEMPLATE_VARIATION_ATTRIBUTE_MAP => 'Ceres::ResultFields.VariationAttributeMap'
-            ]
+            ],
+            false
         );
 
         $this->listenToIO(
@@ -340,12 +342,16 @@ class TemplateServiceProvider extends ServiceProvider
         $templateConfigRepo = pluginApp(TemplateConfigRepositoryContract::class);
 
         $templateConfigRepo
+            ->registerConfigValue('currency.format', $ceresConfig->currency->format)
+            ->registerConfigValue('sort.defaultSorting', $ceresConfig->sorting->defaultSorting)
+            ->registerConfigValue('sort.defaultSortingSearch', $ceresConfig->sorting->defaultSortingSearch)
             ->registerConfigValue('sorting.prioritySearch1', $ceresConfig->sorting->prioritySearch1)
             ->registerConfigValue('sorting.prioritySearch2', $ceresConfig->sorting->prioritySearch2)
             ->registerConfigValue('sorting.prioritySearch3', $ceresConfig->sorting->priorityCategory3)
             ->registerConfigValue('sorting.priorityCategory1', $ceresConfig->sorting->priorityCategory1)
             ->registerConfigValue('sorting.priorityCategory2', $ceresConfig->sorting->priorityCategory2)
             ->registerConfigValue('sorting.priorityCategory3', $ceresConfig->sorting->priorityCategory3)
+            ->registerConfigValue('sorting.dynamicInherit', $ceresConfig->sorting->dynamicInherit)
             ->registerConfigValue('sorting.dynamicPrio1', $ceresConfig->sorting->dynamicPrio1)
             ->registerConfigValue('sorting.dynamicPrio2', $ceresConfig->sorting->dynamicPrio2)
             ->registerConfigValue('item.name', $ceresConfig->item->itemName)

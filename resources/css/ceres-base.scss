@@ -173,18 +173,25 @@ $brand-info:                $cyan !default;
 $brand-warning:             $yellow !default;
 $brand-danger:              $red !default;
 
-$primary:                   $brand-primary !default;
-$secondary:                 $brand-secondary !default;
-$success:                   $brand-success !default;
-$info:                      $brand-info !default;
-$warning:                   $brand-warning !default;
-$danger:                    $brand-danger !default;
+@function check-color($color, $fallback) {
+    @if type-of($color) != color {
+        @return $fallback;
+    }
+    @return $color;
+}
+
+$primary:                   check-color($brand-primary, $blue) !default;
+$secondary:                 check-color($brand-secondary, $gray-600) !default;
+$success:                   check-color($brand-success, $green) !default;
+$info:                      check-color($brand-info, $cyan) !default;
+$warning:                   check-color($brand-warning, $yellow) !default;
+$danger:                    check-color($brand-danger, $red) !default;
 $light:                     $gray-100 !default;
 $dark:                      $gray-800 !default;
 
 $yiq-text-dark:             $gray-900 !default;
 $yiq-text-light:            $white !default;
-$yiq-contrasted-threshold:  150 !default;
+$yiq-contrasted-threshold:  186 !default;
 
 $body-bg:                   $gray-100 !default;
 
@@ -8901,6 +8908,11 @@ button:focus {
             line-height: inherit;
         }
     }
+
+    &[disabled],
+    &.disabled {
+        cursor: not-allowed;
+    }
 }
 
 .btn-xs-max-width {
@@ -9082,6 +9094,10 @@ button:focus {
     max-width: 1200px;
 }
 
+.overflow-x-hidden {
+    overflow-x: hidden;
+}
+
 .lozad {
     display: block;
     min-height: 1px;
@@ -9137,6 +9153,15 @@ style2 {
         }
     }
 }
+
+.modal-multi-row {
+    .row {
+        background-color: $gray-100;
+        border: 1px solid $gray-300;
+        margin: 0 0 1rem 0;
+        padding-top: 1rem;
+    }
+}
  // TODO: This would better fit into /components
 [class^="prop-"] {
     position: relative;
@@ -9152,7 +9177,7 @@ style2 {
         @each $i in 1, 2, 3 {
             @each $j in 1, 2, 3 {
                 .prop#{$infix}-#{$i}-#{$j} {
-                    padding-bottom: percentage($j / $i) // stylelint-disable-line declaration-no-important;
+                    padding-bottom: percentage($j / $i);
                 }
             }
         }
@@ -9176,6 +9201,10 @@ a:hover,
 a:focus,
 a:active {
     text-decoration: none;
+}
+
+.tooltip {
+    z-index: $zindex-9;
 }
 
 // prevent iOS standard zoom on input elements on focus
@@ -10600,6 +10629,10 @@ textarea.no-resize {
         color: $footer-color;
     }
 
+    > .container-max {
+        max-width: 1170px;
+    }
+
     .plenty-brand {
         height: 30px;
     }
@@ -10839,8 +10872,17 @@ textarea.no-resize {
 }
 
 .basket-preview-footer {
-    .btn + .btn {
-        margin-top: 0;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+
+    > * {
+        -webkit-box-flex: 1;
+            -ms-flex: 1 0 40%;
+                flex: 1 0 40%;
+        margin-top: $spacer * .5;
+    }
+
+    > *:nth-child(2n) {
         margin-left: $spacer;
     }
 }
@@ -10907,6 +10949,14 @@ textarea.no-resize {
 
         .basket-preview-overlay {
             background-color: transparent;
+        }
+    }
+}
+
+.basket-open {
+    [data-header-offset] {
+        > * {
+            z-index: auto !important; // stylelint-disable-line declaration-no-important
         }
     }
 }
@@ -11027,6 +11077,10 @@ textarea.no-resize {
 
         /* addToBasket */
         .btn {
+            z-index: 1;
+        }
+
+        .vat a {
             z-index: 1;
         }
     }
@@ -12492,8 +12546,16 @@ html.ie .v-s-boxes .v-s-box.invalid { // stylelint-disable-line selector-no-qual
 }
 
 .widget-background {
-    &.widget {
-        width: auto;
+    > .container-max {
+        padding-right: 0;
+        padding-left: 0;
+    }
+
+    &.widget-fw {
+        > .container-max {
+            padding-right: 15px;
+            padding-left: 15px;
+        }
     }
 
     &.align-items-end {
@@ -12501,6 +12563,13 @@ html.ie .v-s-boxes .v-s-box.invalid { // stylelint-disable-line selector-no-qual
             -webkit-box-align: end;
                 -ms-flex-align: end;
                     align-items: flex-end;
+        }
+    }
+
+    .widget-background {
+        .container-max {
+            padding-right: 0;
+            padding-left: 0;
         }
     }
 
@@ -12513,7 +12582,7 @@ html.ie .v-s-boxes .v-s-box.invalid { // stylelint-disable-line selector-no-qual
         z-index: -1;
         height: 100% !important; // stylelint-disable-line declaration-no-important
         background-repeat: no-repeat;
-        background-position: center;
+        background-position: center !important; // stylelint-disable-line declaration-no-important
     }
 
     .huge-font {
@@ -12539,7 +12608,7 @@ html.ie .v-s-boxes .v-s-box.invalid { // stylelint-disable-line selector-no-qual
 
 .widget-grid {
     .widget-background {
-        .container-max {
+        > .container-max {
             padding-right: 0 !important; // stylelint-disable-line declaration-no-important
             padding-left: 0 !important; // stylelint-disable-line declaration-no-important
         }
@@ -13937,6 +14006,14 @@ html.ie { // stylelint-disable-line selector-no-qualifying-type
     }
 }
 
+// fix inconsistent padding
+// stylelint-disable-next-line selector-no-qualifying-type
+html.safari { // stylelint-disable-next-line selector-no-qualifying-type
+    .controls-list i {
+        font-size: 100%;
+    }
+}
+
 .widget {
     margin-bottom: 2rem;
 
@@ -13945,6 +14022,18 @@ html.ie { // stylelint-disable-line selector-no-qualifying-type
 
         .widget {
             margin-bottom: 0;
+        }
+    }
+
+    .widget-fw {
+        position: relative;
+        right: unset !important; // stylelint-disable-line declaration-no-important
+        left: unset !important; // stylelint-disable-line declaration-no-important
+        width: unset !important; // stylelint-disable-line declaration-no-important
+        max-width: unset !important; // stylelint-disable-line declaration-no-important
+
+        &.widget-grid {
+            width: unset !important; // stylelint-disable-line declaration-no-important
         }
     }
 }
@@ -14026,22 +14115,15 @@ html.ie { // stylelint-disable-line selector-no-qualifying-type
 
     &.widget-grid {
         width: calc(100vw + 30px) !important; // stylelint-disable-line function-blacklist, declaration-no-important
+        margin-right: -15px;
         margin-left: -15px;
     }
-}
 
-.widget .widget-fw {
-    position: unset;
-    right: unset !important; // stylelint-disable-line declaration-no-important
-    left: unset !important; // stylelint-disable-line declaration-no-important
-    width: unset;
-    max-width: unset !important; // stylelint-disable-line declaration-no-important
-    margin-right: unset;
-    margin-left: unset;
-
-    &.widget-grid {
-        width: unset !important; // stylelint-disable-line declaration-no-important
-        margin-left: unset;
+    .container-max {
+        .container-max {
+            padding-right: 0;
+            padding-left: 0;
+        }
     }
 }
 
@@ -14067,14 +14149,16 @@ header .widget {
     $infix: breakpoint-infix($breakpoint);
     $next: breakpoint-next($breakpoint);
 
-    @each $i in 1, 2, 3 {
-        @each $j in 1, 2, 3 {
-            .widget-prop#{$infix}-#{$i}-#{$j} .widget-proportional {
-                @extend .prop#{$infix}-#{$i}-#{$j};
-            }
-
-            .widget-proportional.widget-prop#{$infix}-#{$i}-#{$j} {
-                padding-bottom: percentage($j / $i) !important; // stylelint-disable-line declaration-no-important
+    @include media-breakpoint-up($breakpoint) {
+        @each $i in 1, 2, 3 {
+            @each $j in 1, 2, 3 {
+                .widget-prop#{$infix}-#{$i}-#{$j} .widget-proportional {
+                    padding-bottom: percentage($j / $i);
+                }
+                .widget-proportional.widget-prop#{$infix}-#{$i}-#{$j} {
+                    height: auto !important; // stylelint-disable-line declaration-no-important
+                    padding-bottom: percentage($j / $i) !important; // stylelint-disable-line declaration-no-important
+                }
             }
         }
     }
