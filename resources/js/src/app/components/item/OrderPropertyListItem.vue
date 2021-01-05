@@ -254,6 +254,7 @@ export default {
                 }
             }
 
+            this.$store.commit(`${this.itemId}/setVariationPropertySurcharges`, this.$store.getters[`${this.itemId}/variationBasePrice`]);
             this.setVariationOrderProperty({ propertyId: this.property.id, value: value });
         },
 
@@ -350,6 +351,13 @@ export default {
                 {
                     NotificationService.error(err[0]);
                 }
+            }
+
+            if (error.error.message && error.error.message === "Post too large")
+            {
+                NotificationService.error(
+                    this.$translate("Ceres::Template.errorPostTooLarge" , { maxSize: error.error.maxSize })
+                );
             }
         },
 

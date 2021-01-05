@@ -133,6 +133,8 @@ const actions =
                 return;
             }
 
+            const recaptchaEl = event.target.querySelector("[data-recaptcha]");
+
             executeReCaptcha(event.target)
                 .then((recaptchaResponse) =>
                 {
@@ -151,12 +153,14 @@ const actions =
                                     recipient:  formOptions.recipient,
                                     subject:    formOptions.subject || "",
                                     cc:         formOptions.cc,
+                                    bcc:        formOptions.bcc,
                                     replyTo:    formOptions.replyTo,
                                     recaptchaToken: recaptchaResponse
                                 }
                             )
                                 .done(reponse =>
                                 {
+                                    resetRecaptcha(recaptchaEl);
                                     event.target.reset();
                                     disableForm(event.target, false);
                                     NotificationService.success(
@@ -165,6 +169,7 @@ const actions =
                                 })
                                 .fail(response =>
                                 {
+                                    resetRecaptcha(recaptchaEl);
                                     disableForm(event.target, false);
                                     response.error.message = response.error.message || TranslationService.translate("Ceres::Template.contactSendFail");
                                     NotificationService.error(response.error);
@@ -172,6 +177,8 @@ const actions =
                         })
                         .fail(invalidFields =>
                         {
+                            resetRecaptcha(recaptchaEl);
+
                             const fieldNames = [];
 
                             for (const field of invalidFields)
@@ -193,6 +200,14 @@ const actions =
                 });
         }
     };
+
+function resetRecaptcha(recaptchaEl)
+{
+    if (App.config.global.googleRecaptchaVersion === 2 && window.grecaptcha)
+    {
+        window.grecaptcha.reset(recaptchaEl);
+    }
+}
 
 export default
 {

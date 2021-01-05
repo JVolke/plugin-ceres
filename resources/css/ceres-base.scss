@@ -10169,6 +10169,14 @@ html.ie {
     pointer-events: none;
 }
 
+.sticky-element {
+    padding-bottom: .1px; // force disable margin collapse
+
+    p:empty {
+        margin-bottom: 0; // remove margin of empty paragraph for correct height detection
+    }
+}
+
 .sticky-element.is-sticky {
     z-index: $zindex-sticky !important; // stylelint-disable-line declaration-no-important
 }
@@ -13278,8 +13286,17 @@ html.ie {
 }
 
 .widget-text {
+    &.widget {
+        margin-bottom: 0;
+    }
+
     .widget-inner {
         padding: 1rem 1.5rem;
+    }
+
+    // images from data-fields
+    img {
+        max-width: 100%;
     }
 }
 
