@@ -65,9 +65,11 @@
             {{ Twig.if("hasUrl") }}
                 image-url="{{ Twig.print("url") }}"
                 fallback-url="{{ fallbackImagePath }}"
+                role="img"
             {{ Twig.endif() }}
+             
             {{ Twig.if("imageAltText is not empty ") }}
-                alt="{{ Twig.print("imageAltText") }}"
+                aria-label="{{ Twig.print("imageAltText") }}"
             {{ Twig.endif() }}
             :is-background-image="true"
 

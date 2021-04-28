@@ -11,8 +11,12 @@ use Ceres\Widgets\Helper\WidgetTypes;
 
 class GreetingWidget extends BaseWidget
 {
+    /** @inheritDoc */
     protected $template = "Ceres::Widgets.MyAccount.GreetingWidget";
 
+    /**
+     * @inheritDoc
+     */
     public function getData()
     {
         return WidgetDataFactory::make("Ceres::GreetingWidget")
@@ -23,6 +27,10 @@ class GreetingWidget extends BaseWidget
             ->withPosition(100)
             ->toArray();
     }
+
+    /**
+     * @inheritDoc
+     */
     public function getSettings()
     {
         /** @var WidgetSettingsFactory $settings */
@@ -44,6 +52,8 @@ class GreetingWidget extends BaseWidget
             );
 
         $settings->createSpacing(false, true);
+
+        $settings->createAlignment()->withDefaultValue("left");
 
         return $settings->toArray();
     }

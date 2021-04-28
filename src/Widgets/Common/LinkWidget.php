@@ -11,8 +11,12 @@ use Ceres\Widgets\Helper\WidgetTypes;
 
 class LinkWidget extends BaseWidget
 {
+    /** @inheritDoc */
     protected $template = "Ceres::Widgets.Common.LinkWidget";
 
+    /**
+     * @inheritDoc
+     */
     public function getData()
     {
         return WidgetDataFactory::make("Ceres::LinkWidget")
@@ -24,6 +28,9 @@ class LinkWidget extends BaseWidget
             ->toArray();
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getSettings()
     {
         /** @var WidgetSettingsFactory $settings */
@@ -43,6 +50,10 @@ class LinkWidget extends BaseWidget
         $settings->createText("text")
             ->withName("Widget.linkTextLabel")
             ->withTooltip("Widget.linkTextTooltip");
+
+        $settings->createText("linkTitle")
+            ->withName("Widget.linkTitleTextLabel")
+            ->withTooltip("Widget.linkTitleTextTooltip");
 
         $settings->createUrl("url")
             ->withName("Widget.linkUrlLabel")
