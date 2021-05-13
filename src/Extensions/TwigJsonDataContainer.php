@@ -1,6 +1,7 @@
 <?php
 namespace Ceres\Extensions;
 
+use Plenty\Plugin\Log\Loggable;
 use Plenty\Plugin\Templates\Extensions\Twig_Extension;
 use Plenty\Plugin\Templates\Factories\TwigFactory;
 
@@ -13,6 +14,7 @@ use Plenty\Plugin\Templates\Factories\TwigFactory;
  */
 class TwigJsonDataContainer extends Twig_Extension
 {
+    use Loggable;
     /**
      * @var TwigFactory $twig The factory to render TWIG.
      */
@@ -82,6 +84,7 @@ class TwigJsonDataContainer extends Twig_Extension
         }
 
         $this->dataStorage[$uid] = json_encode($data);
+        $this->getLogger(__METHOD__)->error("Ceres Testing", $this->dataStorage);
         return $uid;
     }
 
@@ -93,6 +96,8 @@ class TwigJsonDataContainer extends Twig_Extension
     public function getJsonData()
     {
         $result = [];
+        $this->getLogger(__METHOD__)->error("Ceres Testing", $this->dataStorage);
+
         foreach( $this->dataStorage as $uid => $data )
         {
             $script  = "<!-- SSR:global(jsonData.$uid) -->\n";
@@ -103,6 +108,7 @@ class TwigJsonDataContainer extends Twig_Extension
 
             $result[] = $script;
         }
+        $this->getLogger(__METHOD__)->error("Ceres Testing", $result);
 
         return implode("\n", $result);
     }
