@@ -1,5 +1,65 @@
 # Release Notes for Ceres
 
+## v5.0.32 (2021-06-01) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.31...5.0.32" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
+
+### Added
+
+- In the plentyShop assistant, the validity of the session cookie can now additionally be set to one hour or one day.
+- You can now activate the mapping of various barcodes (GTIN-8, GTIN-13, ISBN, and MPN), the price validity (priceValidUntil), and the SKU for the Rich Snippets of the single item view in the SEO settings of the plentyShop assistant and the Ceres settings.
+
+### Changed
+
+- Errors in server-side rendering of the Vue.js app can now be caught. In this case, the page is rendered client-side.
+- In the image carousel widget, the performance for loading linked item variations has been improved.
+
+### Fixed
+
+- The content of a text widget is no longer rendered on the server side (SSR) to prevent hydration errors.
+- The logic for scrolling fixed elements in the header has been adjusted. This improves the 'Cumulative Shift Layout' (CLS) value of the Google Core Web Vitals.
+- Under certain circumstances, the item list widget did not display images in ShopBuilder. This has been fixed.
+- Due to an error, server-side nested components could not be overwritten via `data-component`, which led to hydration errors. This has been fixed.
+- To run the Ceres assistant, plentymarkets users no longer require the user rights for the "Accounting" and "Order status" sections.
+- Due to an error, `window.ceresStore` could no longer be accessed in the AfterScriptsLoaded container. This has been fixed.
+
+### Changed templates
+
+- In Ceres 5.0.32 we have made changes to a template file which are relevant for theme developers. You can find the changed template below. The link directs you to the effected changes in the corresponding file.
+- [resources/views/PageDesign/Partials/Header/DefaultHeader.twig](https://github.com/plentymarkets/plugin-ceres/pull/2874/files#diff-19f0c0c56118a0d17212318a2cf8c6e113276dc4c61779c2317b2e7a0976db31)
+- [resources/views/PageDesign/Partials/Header/Header.twig](https://github.com/plentymarkets/plugin-ceres/pull/2874/files#diff-f2a11c8bc92192c490363ceeb2b7e9a02819568c77971a10e43eedc93270014f)
+- [resources/views/Widgets/Category/ItemGridWidget.twig](https://github.com/plentymarkets/plugin-ceres/pull/2881/files#diff-f0aaf1ea155523f16c664c97d4b8877ad9db66f705f85a59ebffc0a3834f2456)
+- [resources/views/Widgets/Common/ImageCarouselWidget.twig](https://github.com/plentymarkets/plugin-ceres/pull/2875/files#diff-43b0576fe9cb61d0343a4aa220f562347c237717821f276ab632973e3970ec96)
+- [resources/views/Item/SingleItemWrapper.twig](https://github.com/plentymarkets/plugin-ceres/pull/2879/files#diff-192a8837dba88964356b7ecd49003fe083ed719e2c601b9623e6dd4b24be9326)
+  
+## v5.0.31 (2021-05-19) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.30...5.0.31" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
+
+### Added
+
+- The image box widget now has another option for the aspect ratio setting: "Retain aspect ratio". With this option, the widget retains the aspect ratio of the image.
+- At the selection field widget of the contact form, you can now use the selection type "Checkboxes" in combination with the option "Mandatory field" to define the minimum and maximum amount of options to be selected.
+- The item list widget now supports image preloading.
+
+### Changed
+
+- The QuantityInput component is now loaded together with the AddToBasket component. This reduces the loading time of the item view. Thanks to @naturdrogerie
+- The ShippingCountrySelect component in the header is now covered by Intersect instead of Lazy-Hydrate. Thanks to @MaxBentz!
+
+### Fixed
+
+- The setting for enabling Vue SSR in the assistant could not be displayed in preview mode configurations. This has been fixed.
+- Templates of nested components that have not been registered via Vue.component() are taken into account on the server-side.
+- The delimiters in overwritten component templates are interpreted correctly by SSR.
+- NullPointerExceptions could occur in the LazyLoad component. The behaviour has been fixed.
+
+### Changed templates
+
+- In Ceres 5.0.31 we have made changes to a template file which are relevant for theme developers. You can find the changed template below. The link directs you to the effected changes in the corresponding file.
+  
+- [resources/views/Widgets/Common/ImageBoxWidget.twig](https://github.com/plentymarkets/plugin-ceres/pull/2856/files#diff-9f438954b9f177761379a8b382eea014077ec743060583796ac4f9aaed3d3003)
+- [resources/views/Widgets/Common/ItemListWidget.twig](https://github.com/plentymarkets/plugin-ceres/pull/2862/files#diff-56e4aca5195c81e2f933daaf2a1d1397fcd1e72844a24d75155dcab09e4cb0ee)
+- [resources/views/Widgets/Form/SelectionWidget.twig](https://github.com/plentymarkets/plugin-ceres/pull/2855/files#diff-87084c109a175d99c3284c8dc3de606d3ef045d10aa519da1acf7530c5b36fc0)
+- [resources/views/Widgets/Header/TopBarWidget.twig](https://github.com/plentymarkets/plugin-ceres/pull/2851/files#diff-2696f6a2e31a39130c691133b3d6fdf30b218a6bdbbd0717433c835d060c3f66) 
+- [resources/views/Widgets/Header/DefaultHeader.twig](https://github.com/plentymarkets/plugin-ceres/pull/2851/files#diff-19f0c0c56118a0d17212318a2cf8c6e113276dc4c61779c2317b2e7a0976db31)
+
 ## v5.0.30 (2021-05-14) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.29...5.0.30" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
 
 ### Changed

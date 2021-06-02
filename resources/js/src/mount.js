@@ -2,6 +2,8 @@ import Vue from "vue";
 import { isNullOrUndefined } from "./app/helper/utils";
 import { compileToFunctions, ssrCompileToFunctions } from "vue-template-compiler";
 
+const kebabCase = require("lodash/kebabCase");
+
 const originalMountFn = Vue.prototype.$mount;
 const originalComponentFn = Vue.component;
 
@@ -55,55 +57,105 @@ function mount(el, hydrating)
  */
 function component(id, definition)
 {
-    const customTemplate = getComponentTemplate(id);
+    return originalComponentFn.call(this, id, applyOverride(definition, id));
+}
 
-    let newDefinition = definition;
+/**
+ * Compile and assign custom template to component if defined.
+ * Recursively apply overrides for defined child components.
+ *
+ * @param {Object|Function} component The vue component to apply the override to.
+ * @param {string} name Tag name of the component. Used to query custom templates by. If not defined, the name property of the component object will be used. (Optional)
+ */
+function applyOverride(component, name)
+{
+    // use ssr optimized compiler function if document is not defined
+    const compileFn = typeof document !== "undefined" ? compileToFunctions : ssrCompileToFunctions;
 
-    if (customTemplate)
+    if (typeof component === "object")
     {
-        // use ssr optimized compiler function if document is not defined
-        const compileFn = typeof document !== "undefined" ? compileToFunctions : ssrCompileToFunctions;
-
-        if (typeof definition === "object")
+        if (component.components)
         {
-            // overridden component is defined in the common way: Vue.component('...', { ... })
-            newDefinition = Object.assign(
-                definition,
-                compileFn(customTemplate)
-            );
+            applyOverrideToChildren(component);
         }
-        else if (typeof definition === "function")
-        {
-            // overridden component is defined asynchronously
-            newDefinition = () =>
-            {
-                // invoke async loading function
-                const asyncComponent = definition();
 
-                if (asyncComponent instanceof Promise)
+        const customTemplate = getComponentTemplate(name || component.name);
+
+        // overridden component is defined in the common way: Vue.component('...', { ... })
+        return Object.assign(
+            component,
+            customTemplate ? compileFn(customTemplate) : {}
+        );
+    }
+    else if (typeof component === "function")
+    {
+        // overridden component is defined asynchronously
+        return () =>
+        {
+            // invoke async loading function
+            const asyncComponent = component();
+            const customTemplate = getComponentTemplate(name || component.name);
+
+            if (asyncComponent instanceof Promise)
+            {
+                return asyncComponent.then((module) =>
                 {
-                    return asyncComponent.then((module) =>
+                    if (module.default.components)
+                    {
+                        applyOverrideToChildren(module.default);
+                    }
+
+                    if (customTemplate)
                     {
                         // override template after resolving external chunk
                         delete module.default.render;
                         module.default.template = replaceDelimiters(customTemplate);
-                        return module;
-                    });
+                    }
+
+                    return module;
+                });
+            }
+            else
+            {
+                // may never gets called
+                if (asyncComponent && asyncComponent.components)
+                {
+                    applyOverrideToChildren(asyncComponent);
                 }
-                else
+
+                if (customTemplate)
                 {
                     // override component definition of already loaded async component
                     Object.assign(
                         asyncComponent,
                         compileFn(customTemplate)
                     );
-                    return asyncComponent;
                 }
-            };
-        }
+
+                return asyncComponent;
+            }
+        };
     }
 
-    return originalComponentFn.call(this, id, newDefinition);
+    return component;
+}
+
+/**
+ * Check if component has the components field set and calls applyOverride for each entry.
+ * @param {Object} component
+ * @return {Object}
+ */
+function applyOverrideToChildren(component)
+{
+    component.components = Object.keys(component.components).reduce((components, key) =>
+    {
+        return {
+            ...components,
+            [key]: applyOverride(component.components[key], kebabCase(key))
+        };
+    }, {});
+
+    return component;
 }
 
 /**
@@ -160,7 +212,13 @@ function getComponentTemplate(tagName)
         }
         else if (typeof templates !== "undefined")
         {
-            componentTemplates = templates;
+            componentTemplates = Object.keys(templates || {}).reduce((result, key) =>
+            {
+                return {
+                    ...result,
+                    [key]: replaceDelimiters(templates[key])
+                };
+            }, {});
         }
     }
 
