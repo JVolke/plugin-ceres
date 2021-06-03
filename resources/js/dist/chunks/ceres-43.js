@@ -142,7 +142,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   computed: {
     isVisible: function isVisible() {
-      return this.$store.state.consents ? App.isShopBuilder || !this.$store.state.consents.hasResponse || !this.isCollapsed : false;
+      return App.isShopBuilder || !this.$store.state.consents.hasResponse || !this.isCollapsed;
     },
     isShopBuilder: function isShopBuilder() {
       return App.isShopBuilder;

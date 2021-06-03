@@ -111,7 +111,7 @@ export default {
     {
         isVisible()
         {
-            return this.$store.state.consents ? App.isShopBuilder || !this.$store.state.consents.hasResponse || !this.isCollapsed : false;
+            return App.isShopBuilder || !this.$store.state.consents.hasResponse || !this.isCollapsed;
         },
 
         isShopBuilder()
