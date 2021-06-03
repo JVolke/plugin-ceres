@@ -4122,7 +4122,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
   },
   computed: {
     isVisible: function isVisible() {
-      return App.isShopBuilder || !this.$store.state.consents.hasResponse || !this.isCollapsed;
+      return this.$store.state.consents ? App.isShopBuilder || !this.$store.state.consents.hasResponse || !this.isCollapsed : false;
     },
     isShopBuilder: function isShopBuilder() {
       return App.isShopBuilder;
@@ -66657,27 +66657,27 @@ function createApp(options, store) {
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("user-login-handler", _app_components_customer_login_UserLoginHandler_vue__WEBPACK_IMPORTED_MODULE_18__["default"]);
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("item-bundle", function () {
-    return __webpack_require__.e(/*! import() */ 30).then(__webpack_require__.bind(null, /*! ./app/components/item/ItemBundle.vue */ "./resources/js/src/app/components/item/ItemBundle.vue"));
+    return __webpack_require__.e(/*! import() */ 32).then(__webpack_require__.bind(null, /*! ./app/components/item/ItemBundle.vue */ "./resources/js/src/app/components/item/ItemBundle.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("order-property-value", function () {
-    return __webpack_require__.e(/*! import() */ 33).then(__webpack_require__.bind(null, /*! ./app/components/item/OrderPropertyValue.vue */ "./resources/js/src/app/components/item/OrderPropertyValue.vue"));
+    return __webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(null, /*! ./app/components/item/OrderPropertyValue.vue */ "./resources/js/src/app/components/item/OrderPropertyValue.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("quantity-input", function () {
     return __webpack_require__.e(/*! import() */ 0).then(__webpack_require__.bind(null, /*! ./app/components/item/QuantityInput.vue */ "./resources/js/src/app/components/item/QuantityInput.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("tag-list", function () {
-    return __webpack_require__.e(/*! import() */ 37).then(__webpack_require__.bind(null, /*! ./app/components/item/TagList.vue */ "./resources/js/src/app/components/item/TagList.vue"));
+    return __webpack_require__.e(/*! import() */ 39).then(__webpack_require__.bind(null, /*! ./app/components/item/TagList.vue */ "./resources/js/src/app/components/item/TagList.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("category-item", _app_components_itemList_CategoryItem_vue__WEBPACK_IMPORTED_MODULE_19__["default"]);
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("item-search", _app_components_itemList_ItemSearch_vue__WEBPACK_IMPORTED_MODULE_20__["default"]);
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("search-suggestion-item", function () {
-    return __webpack_require__.e(/*! import() */ 38).then(__webpack_require__.bind(null, /*! ./app/components/itemList/SearchSuggestionItem.vue */ "./resources/js/src/app/components/itemList/SearchSuggestionItem.vue"));
+    return __webpack_require__.e(/*! import() */ 27).then(__webpack_require__.bind(null, /*! ./app/components/itemList/SearchSuggestionItem.vue */ "./resources/js/src/app/components/itemList/SearchSuggestionItem.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("item-filter-list", function () {
-    return __webpack_require__.e(/*! import() */ 4).then(__webpack_require__.bind(null, /*! ./app/components/itemList/filter/ItemFilterList.vue */ "./resources/js/src/app/components/itemList/filter/ItemFilterList.vue"));
+    return __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.bind(null, /*! ./app/components/itemList/filter/ItemFilterList.vue */ "./resources/js/src/app/components/itemList/filter/ItemFilterList.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("item-filter-tag-list", function () {
-    return __webpack_require__.e(/*! import() */ 39).then(__webpack_require__.bind(null, /*! ./app/components/itemList/filter/ItemFilterTagList.vue */ "./resources/js/src/app/components/itemList/filter/ItemFilterTagList.vue"));
+    return __webpack_require__.e(/*! import() */ 28).then(__webpack_require__.bind(null, /*! ./app/components/itemList/filter/ItemFilterTagList.vue */ "./resources/js/src/app/components/itemList/filter/ItemFilterTagList.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("live-shopping-item", function () {
     return __webpack_require__.e(/*! import() */ 6).then(__webpack_require__.bind(null, /*! ./app/components/liveShopping/LiveShoppingItem.vue */ "./resources/js/src/app/components/liveShopping/LiveShoppingItem.vue"));
@@ -66710,40 +66710,40 @@ function createApp(options, store) {
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("wish-list-count", _app_components_wishList_WishListCount_vue__WEBPACK_IMPORTED_MODULE_28__["default"]);
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("lazy-load", _app_components_common_LazyLoad_vue__WEBPACK_IMPORTED_MODULE_16__["default"]);
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("add-to-wish-list", function () {
-    return __webpack_require__.e(/*! import() */ 27).then(__webpack_require__.bind(null, /*! ./app/components/item/AddToWishList.vue */ "./resources/js/src/app/components/item/AddToWishList.vue"));
+    return __webpack_require__.e(/*! import() */ 29).then(__webpack_require__.bind(null, /*! ./app/components/item/AddToWishList.vue */ "./resources/js/src/app/components/item/AddToWishList.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("graduated-prices", function () {
-    return __webpack_require__.e(/*! import() */ 28).then(__webpack_require__.bind(null, /*! ./app/components/item/GraduatedPrices.vue */ "./resources/js/src/app/components/item/GraduatedPrices.vue"));
+    return __webpack_require__.e(/*! import() */ 30).then(__webpack_require__.bind(null, /*! ./app/components/item/GraduatedPrices.vue */ "./resources/js/src/app/components/item/GraduatedPrices.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("item-data-table", function () {
     return __webpack_require__.e(/*! import() */ 5).then(__webpack_require__.bind(null, /*! ./app/components/item/ItemDataTable.vue */ "./resources/js/src/app/components/item/ItemDataTable.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("item-image-carousel", function () {
-    return __webpack_require__.e(/*! import() */ 31).then(__webpack_require__.bind(null, /*! ./app/components/item/ItemImageCarousel.vue */ "./resources/js/src/app/components/item/ItemImageCarousel.vue"));
+    return __webpack_require__.e(/*! import() */ 33).then(__webpack_require__.bind(null, /*! ./app/components/item/ItemImageCarousel.vue */ "./resources/js/src/app/components/item/ItemImageCarousel.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("item-price", function () {
-    return __webpack_require__.e(/*! import() */ 32).then(__webpack_require__.bind(null, /*! ./app/components/item/ItemPrice.vue */ "./resources/js/src/app/components/item/ItemPrice.vue"));
+    return __webpack_require__.e(/*! import() */ 34).then(__webpack_require__.bind(null, /*! ./app/components/item/ItemPrice.vue */ "./resources/js/src/app/components/item/ItemPrice.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("set-price", function () {
-    return __webpack_require__.e(/*! import() */ 34).then(__webpack_require__.bind(null, /*! ./app/components/item/SetPrice.vue */ "./resources/js/src/app/components/item/SetPrice.vue"));
+    return __webpack_require__.e(/*! import() */ 36).then(__webpack_require__.bind(null, /*! ./app/components/item/SetPrice.vue */ "./resources/js/src/app/components/item/SetPrice.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("order-property-list", function () {
-    return __webpack_require__.e(/*! import() */ 3).then(__webpack_require__.bind(null, /*! ./app/components/item/OrderPropertyList.vue */ "./resources/js/src/app/components/item/OrderPropertyList.vue"));
+    return __webpack_require__.e(/*! import() */ 4).then(__webpack_require__.bind(null, /*! ./app/components/item/OrderPropertyList.vue */ "./resources/js/src/app/components/item/OrderPropertyList.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("variation-select", function () {
     return __webpack_require__.e(/*! import() */ 12).then(__webpack_require__.bind(null, /*! ./app/components/item/VariationSelect.vue */ "./resources/js/src/app/components/item/VariationSelect.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("item-availability", function () {
-    return __webpack_require__.e(/*! import() */ 29).then(__webpack_require__.bind(null, /*! ./app/components/item/ItemAvailability.vue */ "./resources/js/src/app/components/item/ItemAvailability.vue"));
+    return __webpack_require__.e(/*! import() */ 31).then(__webpack_require__.bind(null, /*! ./app/components/item/ItemAvailability.vue */ "./resources/js/src/app/components/item/ItemAvailability.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("single-item-bundle", function () {
     return __webpack_require__.e(/*! import() */ 8).then(__webpack_require__.bind(null, /*! ./app/components/item/SingleItemBundle.vue */ "./resources/js/src/app/components/item/SingleItemBundle.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("single-add-to-basket", function () {
-    return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(36)]).then(__webpack_require__.bind(null, /*! ./app/components/item/SingleAddToBasket.vue */ "./resources/js/src/app/components/item/SingleAddToBasket.vue"));
+    return Promise.all(/*! import() */[__webpack_require__.e(0), __webpack_require__.e(1), __webpack_require__.e(38)]).then(__webpack_require__.bind(null, /*! ./app/components/item/SingleAddToBasket.vue */ "./resources/js/src/app/components/item/SingleAddToBasket.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("set-quantity-input", function () {
-    return __webpack_require__.e(/*! import() */ 35).then(__webpack_require__.bind(null, /*! ./app/components/item/SetQuantityInput.vue */ "./resources/js/src/app/components/item/SetQuantityInput.vue"));
+    return __webpack_require__.e(/*! import() */ 37).then(__webpack_require__.bind(null, /*! ./app/components/item/SetQuantityInput.vue */ "./resources/js/src/app/components/item/SetQuantityInput.vue"));
   });
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("single-item", _app_components_item_SingleItem_vue__WEBPACK_IMPORTED_MODULE_29__["default"]);
   vue__WEBPACK_IMPORTED_MODULE_11___default.a.component("single-item-set-component", _app_components_item_SingleItemSetComponent_vue__WEBPACK_IMPORTED_MODULE_30__["default"]);
