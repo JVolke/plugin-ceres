@@ -111,19 +111,7 @@ export default {
     {
         isVisible()
         {
-            if (App.isShopBuilder)
-            {
-                return true;
-            } 
-            else if (!this.$store.state.consents.hasResponse)
-            {
-                return false;
-            } 
-            else if (!this.isCollapsed)
-            {
-                return false;
-            }
-            return false;
+            return this.$store.state.consents ? App.isShopBuilder || !this.$store.state.consents.hasResponse || !this.isCollapsed : false;
         },
 
         isShopBuilder()
