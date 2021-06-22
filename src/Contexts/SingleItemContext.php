@@ -240,35 +240,18 @@ class SingleItemContext extends GlobalContext implements ContextInterface
 
         $mpnMappingId = $this->ceresConfig->seo->mpnMappingId;
         if ($mpnMappingId > 0) {
-            $propertyMpn = '';
-            $propertyGroup = '';
-            foreach ($itemData['variationProperties'] as $propertyGroup) {
-                foreach ($propertyGroup['properties'] as $property) {
-                    if ($property['id'] == $mpnMappingId) {
-                        $propertyMpn = $property['values']['value'];
-                        break 2;
-                    }
-                }
-            }
-            $this->mpn = $propertyMpn;
+            $mpnProperty = $this->getVariationProperty($itemData['variationProperties'], $mpnMappingId);
+            $this->mpn = $mpnProperty["values"]["value"];
         }
         $priceValidUntilMappingId = $this->ceresConfig->seo->priceValidUntilMappingId;
         if ($priceValidUntilMappingId > 0) {
-            $propertyPriceValidUntil = '';
-            $propertyGroup = '';
-            foreach ($itemData['variationProperties'] as $propertyGroup) {
-                foreach ($propertyGroup['properties'] as $property) {
-                    if ($property['id'] == $priceValidUntilMappingId) {
-                        if ($property['cast'] == 'date') {
-                            $orgDate = $property['values']['value'];
-                            $newDate = date("Y-m-d", strtotime($orgDate));
-                            $propertyPriceValidUntil = $newDate;
-                        } else {
-                            $propertyPriceValidUntil = $property['values']['value'];
-                        }
-                        break 2;
-                    }
-                }
+            $priceValidUntilProperty = $this->getVariationProperty($itemData['variationProperties'], $priceValidUntilMappingId);
+            if ($priceValidUntilProperty['cast'] == 'date') {
+                $orgDate = $priceValidUntilProperty['values']['value'];
+                $newDate = date("Y-m-d", strtotime($orgDate));
+                $propertyPriceValidUntil = $newDate;
+            } else {
+                $propertyPriceValidUntil = $priceValidUntilProperty['values']['value'];
             }
             $this->priceValidUntil = $propertyPriceValidUntil;
         }
@@ -283,17 +266,8 @@ class SingleItemContext extends GlobalContext implements ContextInterface
                 $this->sku = $itemData['variation']['number'];
                 break;
             case 3:
-                $propertySku = '';
-                $propertyGroup = '';
-                foreach ($itemData['variationProperties'] as $propertyGroup) {
-                    foreach ($itemData['variationProperties'][0]['properties'] as $property) {
-                        if ($property['id'] == $skuMappingId) {
-                            $propertySku = $property['values']['value'];
-                            break;
-                        }
-                    }
-                }
-                $this->sku = $propertySku;
+                $skuProperty = $this->getVariationProperty($itemData['variationProperties'], $skuMappingId);
+                $this->sku = $skuProperty['values']['value'];
                 break;
         }
 
@@ -324,6 +298,29 @@ class SingleItemContext extends GlobalContext implements ContextInterface
 
         $this->bodyClasses[] = "item-" . $itemData['item']['id'];
         $this->bodyClasses[] = "variation-" . $itemData['variation']['id'];
+    }
+
+    /**
+     * @param $variationProperties
+     * @param $propertyId
+     * @return mixed|string
+     */
+    private function getVariationProperty($variationProperties, $propertyId)
+    {
+        if ($variationProperties)
+        {
+            foreach ($variationProperties as $variationPropertyGroup)
+            {
+                foreach ($variationPropertyGroup["properties"] as $property)
+                {
+                    if ($property["id"] == $propertyId)
+                    {
+                        return $property;
+                    }
+                }
+            }
+        }
+        return "";
     }
 
     /**
