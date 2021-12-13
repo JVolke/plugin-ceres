@@ -256,6 +256,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  name: "basket-totals",
   props: {
     visibleFields: {
       type: Array,
@@ -402,7 +403,8 @@ var render = function() {
           [
             _vm._t("before-item-sum"),
             _vm._v(" "),
-            _vm.visibleFields.includes("basketValueNet")
+            _vm.visibleFields.includes("basketValueNet") ||
+            _vm.visibleFields.includes("basket.value_of_items_net")
               ? [
                   _c(
                     "dt",
@@ -443,7 +445,8 @@ var render = function() {
                 ]
               : _vm._e(),
             _vm._v(" "),
-            _vm.visibleFields.includes("basketValueGross")
+            _vm.visibleFields.includes("basketValueGross") ||
+            _vm.visibleFields.includes("basket.value_of_items_gross")
               ? [
                   _c(
                     "dt",
@@ -593,7 +596,8 @@ var render = function() {
             _vm._v(" "),
             _vm._t("before-shipping-costs"),
             _vm._v(" "),
-            _vm.visibleFields.includes("shippingCostsNet")
+            _vm.visibleFields.includes("shippingCostsNet") ||
+            _vm.visibleFields.includes("basket.shipping_costs_net")
               ? [
                   _c(
                     "dt",
@@ -631,7 +635,8 @@ var render = function() {
                 ]
               : _vm._e(),
             _vm._v(" "),
-            _vm.visibleFields.includes("shippingCostsGross")
+            _vm.visibleFields.includes("shippingCostsGross") ||
+            _vm.visibleFields.includes("basket.shipping_costs_gross")
               ? [
                   _c(
                     "dt",
@@ -707,7 +712,8 @@ var render = function() {
             _vm._v(" "),
             _vm._t("before-total-sum"),
             _vm._v(" "),
-            _vm.visibleFields.includes("totalSumNet")
+            _vm.visibleFields.includes("totalSumNet") ||
+            _vm.visibleFields.includes("basket.order_total_net")
               ? [
                   _c(
                     "dt",
@@ -746,7 +752,8 @@ var render = function() {
             _vm._t("before-vat"),
             _vm._v(" "),
             _vm._l(_vm.basket.totalVats, function(totalVat) {
-              return _vm.visibleFields.includes("vats")
+              return _vm.visibleFields.includes("vats") ||
+                _vm.visibleFields.includes("basket.vat")
                 ? _c("div", { staticClass: "vatTotals" }, [
                     _c("dt", [
                       _vm._v(
@@ -816,7 +823,8 @@ var render = function() {
                     ]
                   : _vm._e(),
                 _vm._v(" "),
-                _vm.visibleFields.includes("totalSumGross")
+                _vm.visibleFields.includes("totalSumGross") ||
+                _vm.visibleFields.includes("basket.order_total_gross")
                   ? [
                       _c(
                         "dt",

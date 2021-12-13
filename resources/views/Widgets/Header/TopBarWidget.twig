@@ -20,8 +20,11 @@
 {{ Twig.set("currencyFormatSelect", Twig.call("config", ["Ceres.currency.format_selection"])) }}
 {{ Twig.set("currencyData", Twig.call("services.checkout.getCurrencyData") ~ "[currencyFormat]") }}
 {{ Twig.set("activeCurrencies", Twig.call("config", ["Ceres.currency.available_currencies"]) ~ " | split(\", \")") }}
-{{ Twig.set("defaultLanguage", Twig.call("services.webstoreConfigurationRepository.getWebstoreConfiguration().defaultLanguage")) }}
+{{ Twig.set("defaultLanguage", "webstoreConfig.defaultLanguage" ) }}
 {{ Twig.set("overrideSearchBar", Twig.call("LayoutContainer.show", ["Ceres::Search.SearchBar"])) }}
+
+{{ Twig.set("visibleFields", Twig.call("config", ["Ceres.basket.preview_data"])) }}	
+{{ Twig.set("visibleFields", "visibleFields | split(\', \')") }}	
 
 <div class="top-bar header-fw{% if customClass | length > 0 %} {{ customClass }}{% endif %}{% if not isFixed %} unfixed{% endif %}">
     <div class="container-max px-0 pr-lg-3">
@@ -169,7 +172,7 @@
 
                         {% if enableBasketPreview %}
                             <li class="list-inline-item control-basket position-relative" @mouseover.once="$store.dispatch('loadComponent', 'basket-preview')">
-                                <a v-toggle-basket-preview href="#" class="toggle-basket-preview nav-link" {{ set_testing_attr("data-testing", "basket-preview-button") }}>
+                                <a v-toggle-basket-preview href="#" class="toggle-basket-preview nav-link" {{ Twig.print('set_testing_attr("data-testing", "basket-preview-button")') }}>
                                     {% if basketValues != "sum" %}
                                         <span class="mr-2" v-basket-item-quantity="$store.state.basket.data.itemQuantity">0</span>
                                     {% endif %}
@@ -181,7 +184,7 @@
                                     {% endif %}
                                 </a>
 
-                                <basket-preview v-if="$store.state.lazyComponent.components['basket-preview']" :show-net-prices="{{ Twig.print("showNetPrices | json_encode") }}">
+                                <basket-preview v-if="$store.state.lazyComponent.components['basket-preview']" :show-net-prices="{{ Twig.print("showNetPrices | json_encode") }}" :visible-fields="{{ Twig.print("visibleFields | json_encode") }}">
                                     <template #before-basket-item>
                                         {{ Twig.print(Twig.call("LayoutContainer.show", ["Ceres::BasketList.BeforeItem"])) }}
                                     </template>
@@ -293,7 +296,6 @@
                         <div class="row py-3">
                             {% if enableLanguageSelect and not isPreview %}
                                 <div class="col-12 {% if enableShippingCountrySelect %}col-lg-6{% else %}col-lg-12{% endif %}">
-
                                     <div class="language-settings">
                                         <div class="list-title">
                                             <strong>{{ Twig.print('trans("Ceres::Template.headerSelectLanguage")') }}</strong>
@@ -311,7 +313,7 @@
                                                     {{ Twig.elseif("language != defaultLanguage") }}
                                                         {{ Twig.set("url", "'/' ~ language ~ urls.trailingSlashSuffix") }}
                                                     {{ Twig.endif() }}
-                                                    <a class="nav-link" href="{{ Twig.print("url") }}" 
+                                                    <a class="nav-link" href="{{ Twig.print("url") }}"
                                                         data-testing="lang-select-{{ Twig.print("language") }}" data-update-url>
                                                         <i class="flag-icon flag-icon-{{ Twig.print("language") }}"></i>
                                                         {{ Twig.print('trans("Ceres::Template.header" ~ language | capitalize)') }}

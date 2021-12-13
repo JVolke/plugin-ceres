@@ -351,7 +351,6 @@ export default {
     {
         this.$nextTick(() =>
         {
-            this.$store.dispatch("addLastSeenItem", this.currentVariation.variation.id);
             this.$store.dispatch(`${this.itemId}/variationSelect/setVariationSelect`, {
                 itemId:             this.itemId,
                 attributes:         this.attributesData,
@@ -366,6 +365,9 @@ export default {
                 this.$store.dispatch("initSetComponents", this.itemData);   
             }
         })
+
+        // listen for variation change to hydrate all children lazy-hydrate components
+        document.addEventListener("onVariationChanged", () => this.hydrateChildren(this.$children));
     },
 
     methods:
@@ -383,6 +385,21 @@ export default {
             }
 
             return this.getDataField(field);
+        },
+
+        // iterate recursively the children components and call their hydrate method, if it is a lazy-hydrate component
+        hydrateChildren(nodes)
+        {
+            nodes.forEach(component => {
+                if (component.$options.name === "lazy-hydrate")
+                {
+                    component.hydrate();
+                }
+                else if (component.$children.length)
+                {
+                    this.hydrateChildren(component.$children);
+                }
+            })
         }
     }
 }

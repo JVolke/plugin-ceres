@@ -45,6 +45,13 @@ class SeoConfig
     private static $manufacturerOptions = [
         "manufacturerNotSet"        => "1",
         "manufacturerExtern"        => "2",
+        "manufacturerName"          => "3",
+    ];
+
+    private static $gtinOptions = [
+        "gtinNotSet"                => "1",
+        "gtinSetFirst"              => "2",
+        "gtinSet"                   => "3",
     ];
 
     private static $gtin8Options = [
@@ -65,10 +72,17 @@ class SeoConfig
         "isbnSet"                     => "3",
     ];
 
+    private static $mpnOptions = [
+        "mpnNotSet"                  => "1",
+        "externalVariationId"        => "2",
+        "mpnSet"                     => "3",
+    ];
+
     private static $skuOptions = [
         "skuVariationID"              => "1",
         "skuVariationNr"              => "2",
         "skuVarPropSet"               => "3",
+        "skuItemID"                   => "4",
     ];
 
     /**
@@ -106,9 +120,17 @@ class SeoConfig
     /**
      * @return array
      */
-    public static function getmanufacturerOptions()
+    public static function getManufacturerOptions()
     {
         return self::$manufacturerOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getGtinOptions()
+    {
+        return self::$gtinOptions;
     }
 
     /**
@@ -133,6 +155,14 @@ class SeoConfig
     public static function getIsbnOptions()
     {
         return self::$isbnOptions;
+    }
+
+    /**
+     * @return array
+     */
+    public static function getMpnOptions()
+    {
+        return self::$mpnOptions;
     }
 
     /**

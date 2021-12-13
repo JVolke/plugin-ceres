@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="isShownOnItemPageCount">
+        <div v-if="isShownOnItemPageCount" class="pt-2">
             <div v-if="propertyGroup.group" :class="paddingClasses" :style="paddingInlineStyles">
                 <div class="h4">
                     {{ propertyGroup.group.names.name }}:
@@ -21,6 +21,7 @@
 import OrderPropertyListItem from "./OrderPropertyListItem.vue";
 
 export default {
+    name: "order-property-list-group",
 
     components:
     {

@@ -5,7 +5,9 @@
                 :key="index"
                 :order-item="orderItem"
                 :is-net="amount.isNet || showNetPrices"
-                :item-details-data="itemDetailsData"></order-return-item>
+                :item-details-data="itemDetailsData"
+        >
+        </order-return-item>
 
         <div class="d-flex flex-wrap flex-column flex-sm-row justify-content-between mt-3">
             <button class="btn btn-primary btn-appearance mt-1" @click="selectAllItems()" :class="buttonSizeClass">
@@ -23,7 +25,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h3 class="modal-title">{{ $translate("Ceres::Template.returnSendBack") }}</h3>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" :aria-label="$translate('Ceres::Template.closeIcon')">&times;</button>
                     </div>
                     <div class="modal-body">
                         <ul>
@@ -133,11 +135,16 @@ export default {
             this.sendOrderReturn().then(
                 response =>
                 {
-                    $(this.$refs.orderReturnConfirmation).modal("hide");
-                    navigateTo(window.location.origin);
                     NotificationService.success(
                         this.$translate("Ceres::Template.returnConfirmationInfo")
                     ).closeAfter(3000);
+
+                    $(this.$refs.orderReturnConfirmation).modal("hide");
+                    if(this.$store.getters.isLoggedIn) {
+                        navigateTo(App.urls.myAccount)
+                    } else {
+                        navigateTo(App.urls.confirmation)
+                    }
                 },
                 error =>
                 {

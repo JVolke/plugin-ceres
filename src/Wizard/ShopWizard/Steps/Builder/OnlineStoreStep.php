@@ -35,6 +35,7 @@ class OnlineStoreStep extends Step
                 $this->buildStoreCategoryTypesStructure(),
                 $this->buildStoreBack2Top(),
                 $this->buildStoreEmailSettings(),
+                $this->buildVariationOrderPropertiesSettings(),
                 $this->buildStoreOrderSettings(),
                 $this->buildStoreShippingSettings(),
                 $this->buildGoogleMapsSettings(),
@@ -345,7 +346,7 @@ class OnlineStoreStep extends Step
                 ],
                 "onlineStore_blockCookies" => [
                     "type" => "checkbox",
-                    "defaultValue" => false,
+                    "defaultValue" => true,
                     "options" => [
                         "name" => "Wizard.blockCookies"
                     ]
@@ -391,6 +392,24 @@ class OnlineStoreStep extends Step
                                 "value" => 0.0,
                                 "caption" => "Wizard.serviceUnavailableFallbackStatus"
                             ],], $this->getOrderStatusListBoxValues())
+                    ]
+                ]
+            ]
+        ];
+    }
+
+    private function buildVariationOrderPropertiesSettings()
+    {
+        return [
+            "title" => "Wizard.variationOrderPropertiesTitle",
+            "description" => "Wizard.variationOrderPropertiesDescription",
+            "condition" => $this->globalsCondition,
+            "form" => [
+                "onlineStore_useVariationOrderProperties" => [
+                    "type" => "checkbox",
+                    "defaultValue" => false,
+                    "options" => [
+                        "name" => "Wizard.useVariationOrderProperties"
                     ]
                 ]
             ]

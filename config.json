@@ -10,7 +10,7 @@
                     "deprecated": true,
                     "label": "Config.headerCompanyNameLabel",
                     "options": {
-                        "defaultValue": "Ceres Webshop"
+                        "defaultValue": "plentyShop LTS"
                     }
                 },
                 "header.company_logo": {
@@ -19,7 +19,7 @@
                     "deprecated": true,
                     "label": "Config.headerCompanyLogoLabel",
                     "options": {
-                        "defaultValue": "images/ceres-logo.svg"
+                        "defaultValue": "images/plentyShop-lts-logo.svg"
                     }
                 },
                 "global.favicon": {
@@ -150,7 +150,7 @@
                     "required": false,
                     "label": "Config.globalBlockCookies",
                     "options": {
-                        "defaultValue": "false"
+                        "defaultValue": "true"
                     }
                 }
             }
@@ -1318,7 +1318,7 @@
                 "basket.data": {
                     "type": "multiCheckBox",
                     "required": false,
-                    "deprecated": true,
+                    "deprecated": false,
                     "label": "Config.basketDataLabel",
                     "options": {
                         "defaultValue": "basket.value_of_items_gross, basket.value_of_items_net, basket.shipping_costs_gross, basket.shipping_costs_net, basket.vat, basket.order_total_gross, basket.order_total_net",
@@ -3458,6 +3458,10 @@
                                 "caption": "Config.currencyAvailableCurrenciesAED"
                             },
                             {
+                                "value": "ANG",
+                                "caption": "Config.currencyAvailableCurrenciesANG"
+                            },
+                            {
                                 "value": "ARS",
                                 "caption": "Config.currencyAvailableCurrenciesARS"
                             },
@@ -4427,8 +4431,54 @@
                                             "value": "2",
                                             "caption": "Config.manufacturerExtern",
                                             "position": 1
+                                        },
+                                        {
+                                            "value": "3",
+                                            "caption": "Config.manufacturerName",
+                                            "position": 2
                                         }
                                     ]
+                                }
+                            }
+                        }
+                    }
+                },
+                "gtin.mapping": {
+                    "type": "verticalContainer",
+                    "label": "Config.gtinMapping",
+                    "options": {
+                        "containerEntries": {
+                            "gtin.mapping.gtin": {
+                                "type": "selectBox",
+                                "required": false,
+                                "label": "Config.gtin",
+                                "options": {
+                                    "defaultValue": "",
+                                    "selectBoxValues": [
+                                        {
+                                            "value": "1",
+                                            "caption": "Config.gtinNotSet",
+                                            "position": 0
+                                        },
+                                        {
+                                            "value": "2",
+                                            "caption": "Config.gtinSetFirst",
+                                            "position": 1
+                                        },
+                                        {
+                                            "value": "3",
+                                            "caption": "Config.gtinSet",
+                                            "position": 2
+                                        }
+                                    ]
+                                }
+                            },
+                            "gtin.mapping.gtinID": {
+                                "type": "inputText",
+                                "required": false,
+                                "label": "Config.gtinID",
+                                "options": {
+                                    "defaultValue": ""
                                 }
                             }
                         }
@@ -4562,6 +4612,31 @@
                     "label": "Config.mpnMapping",
                     "options": {
                         "containerEntries": {
+                            "mpn.mapping.mpn": {
+                                "type": "selectBox",
+                                "required": false,
+                                "label": "Config.mpn",
+                                "options": {
+                                    "defaultValue": "",
+                                    "selectBoxValues": [
+                                        {
+                                            "value": "1",
+                                            "caption": "Config.mpnNotSet",
+                                            "position": 0
+                                        },
+                                        {
+                                            "value": "2",
+                                            "caption": "Config.externalVariationId",
+                                            "position": 1
+                                        },
+                                        {
+                                            "value": "3",
+                                            "caption": "Config.mpnSet",
+                                            "position": 2
+                                        }
+                                    ]
+                                }
+                            },
                             "mpn.mapping.mpnID": {
                                 "type": "inputText",
                                 "required": false,
@@ -4615,6 +4690,11 @@
                                             "value": "3",
                                             "caption": "Config.skuVarPropSet",
                                             "position": 2
+                                        },
+                                        {
+                                            "value": "4",
+                                            "caption": "Config.skuItemID",
+                                            "position": 3
                                         }
                                     ]
                                 }
@@ -4636,6 +4716,7 @@
             "label": "Config.designTab",
             "formFields": {
                 "brand-primary": {
+                    "deprecated": true,
                     "type": "colorPicker",
                     "required": false,
                     "scss": true,
@@ -4645,6 +4726,7 @@
                     }
                 },
                 "brand-secondary": {
+                    "deprecated": true,
                     "type": "colorPicker",
                     "required": false,
                     "scss": true,
@@ -4654,6 +4736,7 @@
                     }
                 },
                 "brand-success": {
+                    "deprecated": true,
                     "type": "colorPicker",
                     "required": false,
                     "scss": true,
@@ -4663,6 +4746,7 @@
                     }
                 },
                 "brand-info": {
+                    "deprecated": true,
                     "type": "colorPicker",
                     "required": false,
                     "scss": true,
@@ -4672,6 +4756,7 @@
                     }
                 },
                 "brand-warning": {
+                    "deprecated": true,
                     "type": "colorPicker",
                     "required": false,
                     "scss": true,
@@ -4681,6 +4766,7 @@
                     }
                 },
                 "brand-danger": {
+                    "deprecated": true,
                     "type": "colorPicker",
                     "required": false,
                     "scss": true,

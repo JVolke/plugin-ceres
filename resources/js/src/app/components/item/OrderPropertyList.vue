@@ -49,6 +49,7 @@
 import OrderPropertyListGroup from "./OrderPropertyListGroup.vue";
 
 export default {
+    name: "order-property-list",
 
     components:
     {
@@ -81,6 +82,17 @@ export default {
             activeSlide: 0,
             touchedSlides: { 0: true }
         };
+    },
+
+    mounted()
+    {
+        if (App.useVariationOrderProperties)
+        {
+            // go to first side, because variation order properties could differ between variations
+            document.addEventListener("onVariationChanged", () => {
+                this.activeSlide = 0;
+            });
+        }
     },
 
     computed:

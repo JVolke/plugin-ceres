@@ -1,10 +1,7 @@
 import Vue from "vue";
-import TranslationService from "../../services/TranslationService";
 import { navigateTo } from "../../services/UrlService";
-import { getUrlParams } from "../../services/UrlService";
 import { pathnameEquals } from "../../helper/url";
 import { isNullOrUndefined, isDefined } from "../../helper/utils";
-const NotificationService = require("../../services/NotificationService");
 const ApiService = require("../../services/ApiService");
 
 // cache updated base prices for performance purposes
@@ -144,59 +141,7 @@ const actions =
     {
         loadBasketData({ state, commit })
         {
-            if ( !state.isBasketInitiallyLoaded )
-            {
-                jQuery
-                    .when(
-                        ApiService.get("/rest/io/basket", getUrlParams(), { cache: false, keepOriginalResponse: true }),
-                        ApiService.get("/rest/io/basket/items", { template: "Ceres::Basket.Basket" }, { cache: false, keepOriginalResponse: true })
-                    )
-                    .then((basket, basketItems) =>
-                    {
-                        if (!basket.events.hasOwnProperty("AfterBasketChanged") && !basketItems.events.hasOwnProperty("AfterBasketChanged"))
-                        {
-                            commit("setBasket", basket.data);
-                            commit("setWishListIds", basket.data.itemWishListIds);
-                        }
-                        commit("setIsBasketInitiallyLoaded");
-                        commit("setBasketItems", basketItems.data);
-
-                    })
-                    .catch((error, status) =>
-                    {
-                        console.log(error, status);
-
-                        if (status > 0)
-                        {
-                            NotificationService.error(
-                                TranslationService.translate("Ceres::Template.basketOops")
-                            ).closeAfter(10000);
-                        }
-                    });
-            }
-
-            ApiService.listen("AfterBasketChanged", data =>
-            {
-                commit("setBasket", data.basket);
-                commit("setShowNetPrices", data.showNetPrices);
-                commit("updateBasketItems", data.basketItems);
-                commit("setWishListIds", data.basket.itemWishListIds);
-            });
-
-            ApiService.listen("AfterBasketItemAdd", data =>
-            {
-                commit("addBasketItem", data.basketItems);
-            });
-
-            ApiService.listen("AfterBasketItemUpdate", data =>
-            {
-                commit("updateBasketItem", data.basketItems[0]);
-            });
-
-            ApiService.after(() =>
-            {
-                commit("setIsBasketItemQuantityUpdate", false);
-            });
+            console.warn("This action is not in use anymore and should not be committed anymore.");
         },
 
         addBasketNotification({ commit }, { type, message })
@@ -347,6 +292,16 @@ function _fillMissingData(state, item)
     {
         oldBasketItem = state.items.find(i => i.id === item.id);
         item.variation = oldBasketItem.variation;
+    }
+
+    if (isDefined(item.basketItemOrderParams))
+    {
+        item.basketItemOrderParams.forEach(param =>
+        {
+            const propToUpdate = item.variation.data.properties.find(prop => prop.propertyId === Number(param.propertyId));
+
+            propToUpdate.property.surcharge = param.price || propToUpdate.property.surcharge;
+        });
     }
 
     if (isNullOrUndefined(item.basketItemOrderParams))

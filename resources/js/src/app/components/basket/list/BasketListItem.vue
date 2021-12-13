@@ -65,6 +65,11 @@
                                         <span v-if="property.cast === 'file'">
                                             <a :href="property.values.value | propertyFileUrl" v-html="property.values.value" target="_blank"></a>
                                         </span>
+                                        <template v-else-if="property.cast === 'multiSelection' && property.values[0] !== undefined">
+                                            <ul class="pl-3">
+                                                <li v-for="multiSelectProperty in property.values">{{ multiSelectProperty.value }}</li>
+                                            </ul>
+                                        </template>
                                         <span v-else v-html="property.values.value"></span>
                                     </div>
                                 </template>
@@ -106,7 +111,7 @@
                     <ul class="ml-1 pl-3">
                         <li v-for="property in basketItem.basketItemOrderParams" :key="property.propertyId" v-show="isPropertyVisible(property.propertyId)">
                             <span class="d-block">
-                                <strong :class="{ 'colon': property.type.length > 0 }">{{ property.name }} ({{ $translate("Ceres::Template.basketIncludeAbbr") }} {{ basketItem.variation.data.properties | propertySurcharge(property.propertyId) | currency }})</strong>
+                              <strong :class="{ 'colon': property.type.length > 0 }">{{ property.name }} <template v-if="$options.filters.propertySurcharge(basketItem.variation.data.properties, property.propertyId) > 0">({{ $translate("Ceres::Template.basketIncludeAbbr") }} {{ basketItem.variation.data.properties | propertySurcharge(property.propertyId) | currency }})</template></strong>
                                 <span>
                                     <order-property-value :property="property"></order-property-value>
                                 </span>
@@ -171,6 +176,8 @@ const NotificationService = require("../../../services/NotificationService");
 import BasketSetComponentList from "./BasketSetComponentList.vue";
 
 export default {
+    name: "basket-list-item",
+    
     components:
     {
         BasketSetComponentList

@@ -132,6 +132,7 @@ var ModalService = __webpack_require__(/*! ../../services/ModalService */ "./res
 var ApiService = __webpack_require__(/*! ../../services/ApiService */ "./resources/js/src/app/services/ApiService.js");
 
 /* harmony default export */ __webpack_exports__["default"] = ({
+  name: "add-item-to-basket-overlay",
   props: {
     defaultTimeToClose: {
       type: Number,
@@ -266,7 +267,24 @@ var render = function() {
                   _vm._v(" "),
                   _vm._m(0),
                   _vm._v(" "),
-                  _vm._m(1)
+                  _c(
+                    "button",
+                    {
+                      staticClass: "close ml-0 pl-1",
+                      attrs: {
+                        type: "button",
+                        "data-dismiss": "modal",
+                        "aria-label": _vm.$translate(
+                          "Ceres::Template.closeIcon"
+                        )
+                      }
+                    },
+                    [
+                      _c("span", { attrs: { "aria-hidden": "true" } }, [
+                        _vm._v("×")
+                      ])
+                    ]
+                  )
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "modal-body" }, [
@@ -372,27 +390,39 @@ var render = function() {
                                             }
                                           },
                                           [
-                                            _vm._v(
-                                              _vm._s(property.name) +
-                                                " (" +
-                                                _vm._s(
-                                                  _vm.$translate(
-                                                    "Ceres::Template.singleItemIncludeAbbr"
+                                            _vm._v(_vm._s(property.name) + " "),
+                                            _vm.$options.filters.propertySurcharge(
+                                              _vm.basketItem.variation.data
+                                                .properties,
+                                              property.propertyId
+                                            ) > 0
+                                              ? [
+                                                  _vm._v(
+                                                    "(" +
+                                                      _vm._s(
+                                                        _vm.$translate(
+                                                          "Ceres::Template.singleItemIncludeAbbr"
+                                                        )
+                                                      ) +
+                                                      " " +
+                                                      _vm._s(
+                                                        _vm._f("currency")(
+                                                          _vm._f(
+                                                            "propertySurcharge"
+                                                          )(
+                                                            _vm.basketItem
+                                                              .variation.data
+                                                              .properties,
+                                                            property.propertyId
+                                                          )
+                                                        )
+                                                      ) +
+                                                      ") "
                                                   )
-                                                ) +
-                                                " " +
-                                                _vm._s(
-                                                  _vm._f("currency")(
-                                                    _vm._f("propertySurcharge")(
-                                                      _vm.basketItem.variation
-                                                        .data.properties,
-                                                      property.propertyId
-                                                    )
-                                                  )
-                                                ) +
-                                                ")"
-                                            )
-                                          ]
+                                                ]
+                                              : _vm._e()
+                                          ],
+                                          2
                                         ),
                                         _vm._v(" "),
                                         _c(
@@ -492,23 +522,6 @@ var staticRenderFns = [
       _c("span", { staticClass: "timer" }),
       _vm._v("s")
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "button",
-      {
-        staticClass: "close ml-0 pl-1",
-        attrs: {
-          type: "button",
-          "data-dismiss": "modal",
-          "aria-label": "Close"
-        }
-      },
-      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-    )
   }
 ]
 render._withStripped = true

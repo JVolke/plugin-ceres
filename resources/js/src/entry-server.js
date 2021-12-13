@@ -1,4 +1,5 @@
 import { createApp as createAppInternal } from "./app";
+import { beforeCreate as beforeCreateInternal } from "./app";
 import Vue from "vue";
 import Vuex from "vuex";
 import { createStore, initServerStore } from "./app/store";
@@ -8,6 +9,11 @@ import { component } from "./mount";
 Vue.component = component;
 
 const globals = { Vue, Vuex };
+
+function beforeCreate(context)
+{
+    beforeCreateInternal(context);
+}
 
 function createApp(context)
 {
@@ -25,7 +31,7 @@ function createApp(context)
             Vue.config.errorHandler = (err, vm, info) =>
             {
                 context.throwError({
-                    message: `[Vue error]: Error in ${ info }: "${ err.toString() }". Activate development mode in Ceres for detailed stack trace.`,
+                    message: `[Vue error]: Error in ${ info }: "${ err.toString() }". Activate development mode in plentyShop LTS for detailed stack trace.`,
                     stack: err.stack
                 });
             };
@@ -50,4 +56,4 @@ function createApp(context)
     });
 }
 
-export { createApp, globals };
+export { createApp, globals, beforeCreate };

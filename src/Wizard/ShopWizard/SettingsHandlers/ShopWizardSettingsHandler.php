@@ -157,6 +157,10 @@ class ShopWizardSettingsHandler implements WizardSettingsHandler
                     $webstoreData['externalVatCheckServiceUnavailableFallbackStatus'] = (float)$data['onlineStore_externalVatIdCheckServiceUnavailableFallbackStatus'];
                 }
 
+                if (isset($data['onlineStore_useVariationOrderProperties'])) {
+                    $webstoreData['useVariationOrderProperties'] = $data['onlineStore_useVariationOrderProperties'];
+                }
+
                 if (isset($data['pagination_sortingMonthlySales'])) {
                     $webstoreData['itemSortByMonthlySales'] = $data['pagination_sortingMonthlySales'];
                 }
@@ -295,6 +299,10 @@ class ShopWizardSettingsHandler implements WizardSettingsHandler
                 ];
 
                 $this->savePreviewConfig($pluginSetId, $previewConfData, (int)$webstoreId);
+                
+                //invalidate caching
+                $cacheInvalidRepo = pluginApp(ContentCacheInvalidationRepositoryContract::class);
+                $cacheInvalidRepo->invalidateAll($plentyId);
             } else {
                 // we set the preview config entry
 
@@ -337,10 +345,6 @@ class ShopWizardSettingsHandler implements WizardSettingsHandler
 
                 $configRepo->saveConfiguration($pluginId, $configData, $pluginSetId);
             }
-
-            //invalidate caching
-            $cacheInvalidRepo = pluginApp(ContentCacheInvalidationRepositoryContract::class);
-            $cacheInvalidRepo->invalidateAll();
         } catch (\Exception $exception) {
             return false;
         }

@@ -274,7 +274,7 @@ $border-radius-lg:          .2rem !default;
 
 $progress-border-radius:    .25rem !default;
 
-//Ceres variables
+//plentyShop LTS variables
 $aside-columns-width: 30rem !default;
 $autocomplete-max-items: 10 !default;
 
@@ -9113,7 +9113,8 @@ a {
 // stylelint-disable selector-type-no-unknown
 [v-cloak],
 script2,
-style2 {
+style2,
+tab-list {
     display: none !important; // stylelint-disable-line declaration-no-important
 }
 // stylelint-enable selector-type-no-unknown
@@ -11091,7 +11092,7 @@ html.ios .basket-preview-content .totals { // stylelint-disable-line selector-no
         position: absolute;
         top: 0;
         right: 0;
-        z-index: 99;
+        z-index: 90;
         cursor: pointer;
         border-color: transparent #f7f7f9 transparent transparent;
         border-style: solid;
@@ -12031,8 +12032,11 @@ html.crios {
     }
 
     .order-property-selection-info-popper {
+        top: 0;
+        right: 0;
+
         .btn {
-            margin: 5px;
+            margin: 4px;
         }
     }
 }
@@ -12157,10 +12161,14 @@ html.crios {
                 visibility: visible;
             }
         }
+    }
 
-        .form-check {
-            padding-left: 1.35rem;
-        }
+    .form-check {
+        margin-bottom: 15px;
+    }
+
+    .checkbox-or-radio {
+        top: -45%;
     }
 
     .order-property-slider-controls {
@@ -13459,6 +13467,11 @@ html.safari .widget-grid .widget-inner-stacked .widget-inner { // stylelint-disa
     background-color: $breadcrumb-bg;
 }
 
+.language-detection {
+    z-index: 200 !important;
+    top: 0;
+}
+
 /* settings */
 $menu-link-color: $primary !default;
 $mobile-navigation-color: $primary !default;
@@ -13485,7 +13498,7 @@ $normalmenu-color: $primary !default;
 
 .navbar-brand {
     img {
-        max-height: 3rem;
+        max-height: 42px;
     }
 }
 
@@ -13739,6 +13752,10 @@ body.menu-is-visible { // stylelint-disable-line selector-no-qualifying-type
     .breadcrumb {
         font-size: .8em;
         background: $gray-900;
+
+        .breadcrumb-item {
+            padding-right: .5rem;
+        }
 
         li {
             display: inline-block;
@@ -15410,7 +15427,7 @@ html.ie .confirmation-order-list .cmp-order-item {
                 -ms-flex-align: center;
                     align-items: center;
             width: 100%;
-            height: 5rem;
+            min-height: 5rem;
             padding: .5em;
             margin-bottom: 0;
             overflow: hidden;

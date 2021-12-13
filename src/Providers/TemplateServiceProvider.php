@@ -46,7 +46,7 @@ use Plenty\Plugin\ConfigRepository;
 /**
  * Class TemplateServiceProvider
  *
- * This class is the Laravel Service Provider for Ceres.
+ * This class is the Laravel Service Provider for plentyShop LTS.
  * The service provider runs on every request and bootstraps the application.
  * See https://laravel.com/docs/6.x/providers for further information.
  * @package Ceres\Providers
@@ -115,7 +115,7 @@ class TemplateServiceProvider extends ServiceProvider
      */
     public function boot(Twig $twig, Dispatcher $eventDispatcher, ConfigRepository $config)
     {
-        //register shopCeres assistant
+        //register plentyShop LTS assistant
         /** @var WizardContainerContract $wizardContainer */
         $wizardContainer = pluginApp(WizardContainerContract::class);
         $wizardContainer->register('shopCeres-assistant', ShopWizard::class);
@@ -271,6 +271,14 @@ class TemplateServiceProvider extends ServiceProvider
             ]
         );
 
+        $consentRepository->registerConsentGroup(
+            'convenience',
+            'Ceres::Template.consentGroupConvenienceLabel',
+            [
+                'position' => 500,
+                'description' => 'Ceres::Template.consentGroupConvenienceDescription'
+            ]
+        );
 
         /** @var WebstoreConfigurationRepositoryContract $webstoreRepository */
         $webstoreRepository = pluginApp(WebstoreConfigurationRepositoryContract::class);
@@ -371,6 +379,25 @@ class TemplateServiceProvider extends ServiceProvider
                 ]
             );
         }
+
+        $consentRepository->registerConsent(
+            'languageDetection',
+            'Ceres::Template.consentLanguageDetectionLabel',
+            [
+                'position' => 400,
+                'description' => 'Ceres::Template.consentLanguageDetectionDescription',
+                'provider' => 'Ceres::Template.headerCompanyName',
+                'lifespan' => $webstoreConfig->sessionLifetime > 0 ? 'Ceres::Template.consentLifespan100Days' : 'Ceres::Template.consentLifespanSession',
+                'policyUrl' => function () {
+                    /** @var ShopUrls $shopUrls */
+                    $shopUrls = pluginApp(ShopUrls::class);
+                    /** @var UrlQuery $urlQuery */
+                    $urlQuery = pluginApp(UrlQuery::class, ['path' => $shopUrls->privacyPolicy]);
+                    return $urlQuery->toAbsoluteUrl();
+                },
+                'group' => 'convenience'
+            ]
+        );
     }
 
     private function registerConfigValues()

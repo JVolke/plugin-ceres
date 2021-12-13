@@ -5,7 +5,7 @@
 
                 <header class="basket-preview-header border-bottom p-3">
                     <span class="h3 mb-0">{{ $translate("Ceres::Template.basketPreview") }}</span>
-                    <button v-toggle-basket-preview type="button" class="close" aria-label="Close">
+                    <button v-toggle-basket-preview type="button" class="close" :aria-label="$translate('Ceres::Template.closeIcon')">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </header>
@@ -37,7 +37,7 @@
 
                         <slot name="before-basket-totals"></slot>
 
-                        <basket-totals>
+                        <basket-totals :visible-fields="visibleFields">
                             <template #before-item-sum>
                                 <slot name="before-item-sum"></slot>
                             </template>
@@ -92,6 +92,7 @@ import ApiService from "../../services/ApiService";
 import { mapState } from "vuex";
 
 export default {
+    name: "basket-preview",
 
     props:
     {
@@ -99,6 +100,10 @@ export default {
         {
             type: Boolean,
             default: false
+        },
+        visibleFields:
+        {
+            type: Array
         }
     },
 

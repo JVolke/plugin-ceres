@@ -17,17 +17,23 @@ context("Coupon", () =>
     it("Should add coupon", () =>
     {
         cy.server().route("POST", "/rest/io/coupon/").as("redeemCoupon");
-        cy.getByTestingAttr("coupon-input").type(COUPON_CODE, { delay: 30 });
+        // make sure basket is loaded proper
+        cy.wait(1000);
+        cy.getByTestingAttr("coupon-input").type("x").clear().type(COUPON_CODE, { delay: 50 });
         cy.getByTestingAttr("coupon-redeem").click();
-        cy.wait("@redeemCoupon");
-        checkTotals(1, true);
+        cy.wait("@redeemCoupon").then(() =>
+        {
+            checkTotals(1, true);
+        });
     });
 
     it("Should remove coupon code", () =>
     {
         cy.server().route("POST", "/rest/io/coupon/").as("redeemCoupon");
         cy.server().route("DELETE", "/rest/io/coupon/4CDSQS/").as("deleteCoupon");
-        cy.getByTestingAttr("coupon-input").type(COUPON_CODE, { delay: 30 });
+        // make sure basket is loaded proper
+        cy.wait(1000);
+        cy.getByTestingAttr("coupon-input").type("x").clear().type(COUPON_CODE, { delay: 50 });
         cy.getByTestingAttr("coupon-redeem").click();
         cy.wait("@redeemCoupon");
         cy.getByTestingAttr("coupon-remove").click();

@@ -18,6 +18,8 @@
 <html lang="{{ lang }}" data-framework="vue" prefix="og: http://ogp.me/ns#" class="icons-loading">
 
 <head>
+    {{ LayoutContainer.show("Ceres::PageDesign.AfterOpeningHeadTag") }}
+
     {{ get_consent_scripts(ceresConfig.global.blockCookies) }}
 
     {% include getPartial('head') %}
@@ -42,6 +44,17 @@
 
 {{ LayoutContainer.show("Ceres::PageDesign.AfterOpeningBodyTag") }}
 
+<script>
+    if('ontouchstart' in document.documentElement)
+    {
+        document.body.classList.add("touch");
+    }
+    else
+    {
+        document.body.classList.add("no-touch");
+    }
+</script>
+
 <!-- SSR:app() -->
 <div id="vue-app" class="app">
     {{ context.renderState() }}
@@ -65,7 +78,7 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <div class="modal-title h3">{{ trans("Ceres::Template.login") }}</div>
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="{{ trans("Ceres::Template.closeIcon") }}">&times;</button>
                     </div>
                     <lazy-load component="login-modal">
                         <login modal-element="login-modal-wrapper">
@@ -111,7 +124,7 @@
                                 </template>
                             </popper>
 
-                            <button type="button" class="close ml-0" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <button type="button" class="close ml-0" data-dismiss="modal" aria-hidden="true" aria-label="{{ trans("Ceres::Template.closeIcon") }}">&times;</button>
                         </div>
                         <div class="modal-body">
                             <registration :is-simple-registration="true" modal-element="simple-registration-modal-wrapper">
@@ -158,7 +171,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <div class="modal-title h3">{{ trans('Ceres::Template.shippingInfoCosts') }}</div>
-                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true" aria-label="{{ trans("Ceres::Template.closeIcon") }}">&times;</button>
                         </div>
                         <div class="modal-body">
                             {% set shopBuilderShippingTemplate = shop_builder_category_template(ceresConfig.global.shippingCostsCategoryId) %}
@@ -176,6 +189,7 @@
     <!-- ./SHIPPINGCOSTS MODAL -->
 </div>
 <!-- /SSR -->
+
 
 <!-- SSR:global(App) -->
 <script id="app-data" type="application/json">
@@ -197,19 +211,28 @@
         "propertyFileUrl": "{{ services.propertyFile.getPropertyFileUrl() }}",
         "isShopBuilder": {{ isShopBuilder | default(false) | json_encode }},
         "bundleSetting": {{ webstoreConfig.dontSplitItemBundle | default(1) }},
+        "bundlePrefix": "{{ services.order.getOrderItemPrefix(2) }}",
+        "bundleComponentPrefix": "{{ services.order.getOrderItemPrefix(3) }}",
         "initialPleaseSelect": {{ webstoreConfig.attributeSelectDefaultOption | default(0) }},
         "publicPath": "{{ plugin_path('Ceres') ~ '/js/dist/' }}",
         "isCheapestSorting": "{{ services.template.isCheapestSorting() }}",
+        "useVariationOrderProperties": {% if webstoreConfig.useVariationOrderProperties | default(0) %}true{% else %}false{% endif %},
         "initialData": {
             "shippingCountries": {{ services.country.getActiveCountriesList() | filterFields(["id", "currLangName", "isoCode2", "states.id", "states.name", "vatCodes"]) | json_encode | raw }},
             "shippingCountryId": {{ services.checkout.getShippingCountryId() }},
             "showNetPrices": {{ showNetPrices | json_encode }}
         },
-        "features": {}
+        "features": {},
+        "languageMap": {{ webstoreConfig.browserLanguage | json_encode | raw }}
     }
 </script>
 <!-- /SSR -->
-<script>window.App = JSON.parse(document.getElementById("app-data").innerText);</script>
+<script>
+    window.App = JSON.parse(document.getElementById("app-data").innerText);
+    window.__loadPluginChunk = function(source) {
+        return source += "?v={{ buildHash }}";
+    };
+</script>
 
 {{ Loader.include_components() }}
 
@@ -254,10 +277,6 @@
 
 <!-- SSR:off() -->
 <script>
-    window.__loadPluginChunk = function(source) {
-        return source += "?v={{ buildHash }}";
-    };
-
     window.vueEventHub = new Vue();
     if (App.config.log.checkSyntax)
     {

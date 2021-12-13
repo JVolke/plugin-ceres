@@ -8,7 +8,7 @@
                     <div class="modal-header">
                         <div class="modal-title h5">{{ $translate("Ceres::Template.singleItemAdded") }}</div>
                         <span class="text-muted ml-auto"><span class="timer"></span>s</span>
-                        <button type="button" class="close ml-0 pl-1" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close ml-0 pl-1" data-dismiss="modal" :aria-label="$translate('Ceres::Template.closeIcon')">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -47,7 +47,7 @@
                                     <ul class="ml-1 pl-3">
                                         <li v-for="property in shownOrderProperties" :key="property.propertyId">
                                             <span class="d-block">
-                                                <strong :class="{ 'colon': property.type.length > 0 }">{{ property.name }} ({{ $translate("Ceres::Template.singleItemIncludeAbbr") }} {{ basketItem.variation.data.properties | propertySurcharge(property.propertyId) | currency }})</strong>
+                                              <strong :class="{ 'colon': property.type.length > 0 }">{{ property.name }} <template v-if="$options.filters.propertySurcharge(basketItem.variation.data.properties, property.propertyId) > 0">({{ $translate("Ceres::Template.singleItemIncludeAbbr") }} {{ basketItem.variation.data.properties | propertySurcharge(property.propertyId) | currency }}) </template></strong>
                                                 <span>
                                                     <order-property-value :property="property"></order-property-value>
                                                 </span>
@@ -89,6 +89,8 @@ const ModalService  = require("../../services/ModalService");
 const ApiService    = require("../../services/ApiService");
 
 export default {
+    name: "add-item-to-basket-overlay",
+    
     props: {
         defaultTimeToClose: {
             type: Number,
