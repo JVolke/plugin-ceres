@@ -246,7 +246,10 @@ export default Vue.component("create-update-address", {
             {
                 NotificationService.error({ code: error.code, message: error.message });
             }
-            else this._handleValidationErrors(error);
+            else
+            {
+                this._handleValidationErrors(error);
+            }
         },
 
         _syncOptionTypesAddressData()
