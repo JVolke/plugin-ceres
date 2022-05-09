@@ -1,5 +1,38 @@
 # Release Notes for plentyShop LTS
 
+## v5.0.50 (2022-05-04) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.49...5.0.50" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
+
+### Changed
+
+- The amount already paid is now displayed on the order confirmation page.
+- The order confirmation page can now display multiple redeemed coupon values.
+- The plentyShop LTS plugin is now compatible with PHP 8.
+- Order properties and characteristics configured as additional costs are now shown as separate items in the totals.
+- For order properties and characteristics, it is now displayed in the single item view, in the shopping cart, and in the order confirmation whether the costs are inclusive or additional.
+- Required, pre-selected order properties that have been configured as additional costs are now displayed without a checkbox below the item price on the single item view.
+
+### Fixed
+
+- When adding an item to the shopping cart, the base price was displayed incorrectly if the item quantity for a graduated price was reached by the addition. This behaviour has been fixed.
+- If the tag name for the language selected in the shop was not stored for a tag, Javascript errors could occur in the shop. This has been fixed. 
+
+
+## v5.0.49 (2022-04-11) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.48...5.0.49" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
+
+### Changed
+
+- The display of graduated prices in the **From price** in the category view can now be configured. The settings for this can be found in the plentyShop assistant under **Displayed information**. This setting is disabled by default.
+- Characteristics of type "none" with additional costs are now displayed below the item price.
+
+### Fixed
+
+- The base price display on the category view was calculated incorrectly if graduated prices were defined for the article. This has been fixed.
+
+### Changed templates
+
+- In Ceres 5.0.49 we made changes to template files which are relevant for theme developers. You can find the changed templates below. The link directs you to the effected changes in the corresponding files.
+- [resources/js/src/app/components/itemList/CategoryItem.vue](https://github.com/plentymarkets/plugin-ceres/pull/3265/files#diff-4c35af622ef09ba8949eb1c47557e3e6651b088291a0d2e2463c9244007b5516)
+
 ## v5.0.48 (2022-03-21) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.47...5.0.48" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
 
 ### TODO
