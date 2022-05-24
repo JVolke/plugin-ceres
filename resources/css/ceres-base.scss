@@ -8985,7 +8985,6 @@ button:focus {
 
 .btn-collapse {
     position: relative;
-    z-index: 999;
     display: block;
     width: 100%;
     font-size: 85%;
@@ -11266,6 +11265,7 @@ body.basket-open {
         color: $gray-600;
     }
 
+    .category-lowest-price,
     .category-unit-price {
         color: $gray-500;
     }
