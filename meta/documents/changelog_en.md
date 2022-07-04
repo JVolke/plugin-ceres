@@ -1,5 +1,24 @@
 # Release Notes for plentyShop LTS
 
+## v5.0.52 (2022-06-29) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.51...5.0.52" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
+
+### New
+
+- In addition to the browser name, the operating system is now also set as a class to the `<html>` object. If no operating system or browser can be detected, separate classes are set for each. We would like to thank @daniel-mannheimer for their contribution.
+
+### Changed
+
+- The translation keys `categoryItemFootnote`, `categoryItemFromPrice`, and `categoryItemLowestPrice` have been renamed to `itemFootnote`, `itemFromPrice`, and `itemLowestPrice`, respectively. If you've stored custom translations for these keys, your translations are automatically assumed for the renamed translation keys.
+- The component `AddressSelect` has been changed in order to display large amounts of data more performantly. The component `DynamicScroller` now wraps individual addresses.
+- The setting **Forward to login page after clicking link in order confirmation** has been removed from the plentyShop LTS settings and the plentyShop assistant. Now, the default behaviour is that customers are always forwarded to the login page. 
+- The variable for the basket has been removed from the `GlobalContext`. Please read this <a href="https://forum.plentymarkets.com/t/plentyshop-basket-variable-wird-aus-dem-globalcontext-entfernt-basket-variable-is-removed-from-the-globalcontext/685718" target="_blank">forum thread</a> for more information.
+
+### Fixed
+
+- Order properties of the type **File** could cause errors on mobile devices if the order property's description was filled out. This has been fixed. 
+- The CSRF token is now only added to REST calls that are directed to your own plentyShop.
+- In the context of the update to PHP 8, several compatability errors have been fixed.
+
 ## v5.0.51 (2022-05-23) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.50...5.0.51" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
 
 ### New
@@ -105,13 +124,13 @@
 ### TODO
 
 - Due to changes to ShopBuilder widgets, it is necessary to regenerate the ShopBuilder contents via the **Regenerate contents** button in the **CMS » ShopBuilder** menu.
-- Graduated prices in the category view are now labelled with a "from" by default. Users can remove the "from" in the **CMS » Multilingualism** menu. The corresponding translation key is **categoryItemFromPrice**. 
+- Graduated prices in the category view are now labelled with a "from" by default. Users can remove the "from" in the **CMS » Multilingualism** menu. The corresponding translation key is **itemFromPrice**. 
 
 ### Added
 
 - ShopBooster now supports cache blocks. In the default plentyShop LTS, header, footer and item tiles (e.g. in item lists) are cached in blocks. This increases the ShopBooster cache coverage.
 - The ShopBuilder preset for the homepage has been completely overhauled. The preset now contains demo images, sample texts, and a collection of various widgets.
-- The asterisk characters for footnotes in the single item view, the category view, and live shopping pages can now be changed in the **CMS » Multilingualism** menu. The corresponding translation keys are **singleItemFootnote1**, **categoryItemFootnote**, and **liveShoppingFootnote**.
+- The asterisk characters for footnotes in the single item view, the category view, and live shopping pages can now be changed in the **CMS » Multilingualism** menu. The corresponding translation keys are **singleItemFootnote1**, **itemFootnote**, and **liveShoppingFootnote**.
 
 ### Changed
 
@@ -121,7 +140,7 @@
 
 ### Fixed
 
-- Graduated prices are now displayed in the category view, if they exist. The graduated price is now also labelled with "from". The corresponding translation key is **categoryItemFromPrice**.
+- Graduated prices are now displayed in the category view, if they exist. The graduated price is now also labelled with "from". The corresponding translation key is **itemFromPrice**.
 - The template of the **Add to wish list** component was changed from an `a-tag` to a `button-tag`.
 - The setting **Show categories as filter options for search results** has been renamed and an error that occurred during saving was fixed.
 - Under certain circumstances, the sticky container widget and the shopping cart preview overlapped. This has been fixed.
@@ -1306,7 +1325,7 @@
 - We added a button to the order history widget via which users can open the order confirmation of an order. This makes it possible to submit a rating for items of an order from the My Account area.
 - The microdata field "url" is now filled in on the single item view.
 - The sorting of variations on item tiles in item lists and the category view can now be configured via the Ceres assistant.
-- The entry **categoryItemFromPrice** has been added to the multilingualism interface. It is used to display a "from" before the price in item lists if the cheapest variation is displayed on the item tile and the item has more than one purchasable variation.
+- The entry **itemFromPrice** has been added to the multilingualism interface. It is used to display a "from" before the price in item lists if the cheapest variation is displayed on the item tile and the item has more than one purchasable variation.
 
 ### Changed
 
