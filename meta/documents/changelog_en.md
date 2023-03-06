@@ -1,6 +1,104 @@
 # Release Notes for plentyShop LTS
 
-## v5.0.55 (2022-09-22) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.55...5.0.56" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
+## v5.0.59 (2023-02-23) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.58...5.0.59" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
+
+### TODO
+
+- Due to changes to ShopBuilder widgets, it is necessary to regenerate the ShopBuilder contents via the **Regenerate contents** button in the **CMS » ShopBuilder** menu.
+
+### Added
+
+- Items that are no longer available are now listed separately on the wish list.
+- As part of the geo-blocking policy, a warning message has been added to the checkout. If customers have selected a delivery country in their delivery address that is not activated for this plentyShop, the warning message informs them that they must select a different delivery country. Furthermore, the buy button is now deactivated and greyed out until customers have selected a valid delivery country for their delivery address. The texts of the warning message and the tooltip that is displayed when hovering over the greyed-out buy button can be changed in the **CMS » Multilingualism** menu. The translation keys are `checkoutInvalidShippingCountryGeoblocking` and `checkoutBuyNowTooltip`, respectively.
+
+### Fixed
+
+- The image box widget rendered the inserted text even if the option **Image without box** was selected for the **Box style** setting. The inserted text is now removed instead of being made invisible.
+- Under some conditions, the sticky container widget on the item view could shake visibly. This was fixed.
+- Fixed a bug in the address selection widget due to which the salutation could not be activated as a visible field in the widget settings.
+- Fixed an autocomplete search bug that occurred on certain Android devices.
+- Added logic that removes shopping cart items that are no longer compatible with the updated customer class when the customer class is changed.
+- Properties of type **File**, which are included on the single item view via ShopBuilder, now only contain the file name without a preceding ID.
+- Under certain circumstances, the correct meta title was not output for the single item view. This has been fixed.
+
+### Removed
+
+- Removed unused CSS of the item grid.
+- Removed unused SCSS files (_legacy.scss, _home.scss).
+
+### Changed templates
+
+- In Ceres 5.0.59 we made changes to template files which are relevant for theme developers. You can find the changed templates below. The link directs you to the effected changes in the corresponding files.
+- [resources/views/Widgets/Common/ImageBoxWidget.twig](https://github.com/plentymarkets/plugin-ceres/pull/3387/files#diff-9f438954b9f177761379a8b382eea014077ec743060583796ac4f9aaed3d3003)
+- [resources/views/Customer/Components/AddressSelect/AddressSelect.twig](https://github.com/plentymarkets/plugin-ceres/pull/3417/files/#diff-969624803dfeb696a58e16de0d95c285a458ec83a615026882d9b1e65386935b)
+- [resources/views/Checkout/Components/PlaceOrder.twig](https://github.com/plentymarkets/plugin-ceres/pull/3417/files/#diff-ac3499fe39e67fd08b24086c79be769096e1ab58885fd4a233847c502b94b317)
+
+## v5.0.58 (2023-01-11) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.57...5.0.58" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
+
+### TODO
+
+- Due to changes to ShopBuilder widgets, it is necessary to regenerate the ShopBuilder contents via the **Regenerate contents** button in the **CMS » ShopBuilder** menu.
+
+### Fixed
+
+- The buttons for consent in the cookie bar were not displayed correctly in certain cases.
+- A javascript function was used that was not compatible with iOS version lower than 13.4. This has been fixed.
+
+## v5.0.57 (2023-01-09) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.56...5.0.57" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
+
+### TODO
+
+- In case you want to activate the placeholder payment method “Already paid” for specific orders that have for example been paid via a multipurpose coupon, you need to activate them for your delivery countries in the plentyShop LTS assistant and afterwards link them to the customer classes you want them to be available for. Further information can be found on the <a href="https://www.bit.ly/3X11knt" target="_blank">plentyShop LTS manual page</a>.
+- Due to changes to ShopBuilder widgets, it is necessary to regenerate the ShopBuilder contents via the **Regenerate contents** button in the **CMS » ShopBuilder** menu.
+
+### Added
+
+- In the plentyShop LTS assistant, you can now activate the placeholder payment method “Already paid” for orders with a shopping cart sum of 0.
+
+### Fixed
+
+- Under special circumstances, plus signs were incorrectly encoded which lead to unwanted behaviour. This has been fixed.
+- Tag URLs now consider the store language.
+- Tag URLs that consist of multiple words no longer contain spaces.
+
+### Changed templates
+
+- In Ceres 5.0.57 we made changes to template files which are relevant for theme developers. You can find the changed templates below. The link directs you to the effected changes in the corresponding files.
+- [resources/views/Category/Item/CategoryItem.twig](https://github.com/plentymarkets/plugin-ceres/pull/3372/files#diff-6e3fe08ffe8086b5176c1c0451cb0c0034b99195843630994e5e79347f8d1158)
+
+## v5.0.56 (2022-11-08) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.55...5.0.56" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
+
+### TODO
+
+- The ShopBuilder contents for order confirmation pages must be updated in the **CMS » ShopBuilder** menu via the **Regenerate contents** button.
+- If you want to give guest customers the possibility to request a new order confirmation link, you have to create and link a new email template. You can find further information on the <a href="https://www.bit.ly/3CDrAfI" target="_blank">ShopBuilder manual page</a>.
+
+### Added
+
+- The softlogin functionality has been revised. If the validity of the order confirmation link in the PlentyShop LTS assistent is set to **Always**, guest customers can now request a new order confirmation link after 90 days by opening the original order confirmation link. Customers will receive the new order confirmation link by email. Please note the TODO in this changelog. You can find further information on the <a href="https://www.bit.ly/3CDrAfI" target="_blank">ShopBuilder manual page</a>.
+- For the salutation for new addresses in the checkout and the My Account area, the option **Please select** can now be set as the preselected option. For the ShopBuilder billing and shipping address widgets, you can set the preselection via the **Preselected salutation** setting in the widget settings. If you do not use ShopBuilder pages, you can set the presselection of the salutation via the **Preselected salutation** setting in the **Checkout and My Account** tab of the plentyShop LTS plugin settings. 
+
+### Changed
+
+- If an EU country can be selected as a delivery country in plentyShop, all EU countries are now available for the billing address. By implementing this change, plentyShop LTS complies with the Geo-Blocking Regulation (EU) No. 2018/302.
+
+### Fixed
+
+- In version 5.0.55 `aria-label` were added for the pagination on item category pages. This change resulted in an error that has now been fixed.
+- On order confirmation pages created via ShopBuilder, the estimated shipping date was not displayed in the correct format. This has been fixed.
+- The script for compiling SCSS files (`bundleSass.js`) now removes old files from the target folder. This adjustment fixes some import errors when deploying plugins.
+- Existing configuration previews of the plentyShop LTS assistent are now transferred to the new plugin set when copying a plugin set. Due to an error, no tiles for the assistent configurations were previously displayed in the plentyShop LTS assistent configuration overview.
+- Missing translation keys were added, which were only available in German and English.
+- For ShopBuilder contents of the type **Item search result**, the sorting option **Relevance** has been added to the **Item sorting** widget.
+
+### Changed templates
+
+- In Ceres 5.0.56 we made changes to template files which are relevant for theme developers. You can find the changed templates below. The link directs you to the effected changes in the corresponding files.
+- [resources/views/Category/Item/Partials/Pagination.twig](https://github.com/plentymarkets/plugin-ceres/pull/3340/files#diff-1b8d2c7ce7416f660f89d11ad8e368be614c2b98efc30526e74286c7f180c3b8)
+- [resources/views/Widgets/OrderConfirmation/OrderDataWidget.twig](https://github.com/plentymarkets/plugin-ceres/pull/3339/files#diff-82affb09026a21fd94995e057ae7214f6751cf84dfed718216f4760865567c33)
+
+
+## v5.0.55 (2022-09-22) <a href="https://github.com/plentymarkets/plugin-ceres/compare/5.0.54...5.0.55" target="_blank" rel="noopener"><b>Overview of all changes</b></a>
 
 ### TODO
 

@@ -2872,8 +2872,8 @@
                                 "caption": "Config.myAccountConfirmationLinkExpirationThirtyDays"
                             },
                             {
-                                "value": "90",
-                                "caption": "Config.myAccountConfirmationLinkExpirationNinetyDays"
+                                "value": "60",
+                                "caption": "Config.myAccountConfirmationLinkExpirationSixtyDays"
                             }
                         ]
                     }
@@ -2886,6 +2886,10 @@
                     "options": {
                         "defaultValue": "male",
                         "selectBoxValues": [
+                            {
+                                "value": "please select",
+                                "caption": "Config.addressDefaultSalutationValuePleaseSelect"
+                            },
                             {
                                 "value": "male",
                                 "caption": "Config.addressDefaultSalutationValueMale"
@@ -3327,6 +3331,14 @@
                                 "caption": "Config.addressFieldEnPhoneNumber"
                             }
                         ]
+                    }
+                },
+                "checkout.already_paid_icon_url": {
+                    "type": "inputFile",
+                    "required": false,
+                    "label": "Config.checkoutIconUrl",
+                    "options": {
+                        "defaultValue": ""
                     }
                 }
             }
