@@ -52772,7 +52772,7 @@ var render = function() {
                       _vm.item.prices.rrp &&
                       _vm.item.prices.rrp.price.value > 0 &&
                       _vm.item.prices.rrp.price.value >
-                        _vm.item.prices.default.unitPrice.value
+                        _vm.item.prices.default.price.value
                         ? _c("div", { staticClass: "price-view-port" }, [
                             _vm.item.prices.specialOffer
                               ? _c("del", { staticClass: "crossprice" }, [
@@ -88218,7 +88218,7 @@ var state = function state() {
 
 var mutations = {
   setBasket: function setBasket(state, basket) {
-    if (state.data.id && JSON.stringify(basket) !== JSON.stringify(state.data)) {
+    if (state.data.sessionId && JSON.stringify(basket) !== JSON.stringify(state.data)) {
       document.dispatchEvent(new CustomEvent("afterBasketChanged", {
         detail: basket
       }));

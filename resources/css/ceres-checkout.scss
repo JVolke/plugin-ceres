@@ -12838,6 +12838,10 @@ html.ie .v-s-boxes .v-s-box.invalid { // stylelint-disable-line selector-no-qual
     @include media-breakpoint-only(xs) {
         min-height: 10rem;
         padding-bottom: 0;
+
+        &.widget-retain-aspect-ratio {
+            min-height: auto !important;
+        }
     }
 
     img {
@@ -15574,9 +15578,6 @@ html.ie .confirmation-order-list .cmp-order-item {
             padding-left: .5rem;
         }
         .icon {
-            display: -webkit-box;
-            display: -ms-flexbox;
-            display: flex;
             width: 4rem;
             max-height: 100%;
             overflow: hidden;

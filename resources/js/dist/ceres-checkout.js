@@ -69987,11 +69987,16 @@ var NotificationService = __webpack_require__(/*! ../../services/NotificationSer
       }
     },
     checkDeliveryAddressError: function checkDeliveryAddressError() {
-      var countryId = Number(this.deliveryAddress.id) === -99 ? this.billingAddress.countryId : this.deliveryAddress.countryId;
-      var validShippingCountry = this.shippingCountryList.find(function (country) {
-        return country.id === countryId;
-      });
-      this.isInvalidShippingCountry = !validShippingCountry;
+      var _this$billingAddress, _this$deliveryAddress;
+
+      var countryId = Number(this.deliveryAddress.id) === -99 ? (_this$billingAddress = this.billingAddress) === null || _this$billingAddress === void 0 ? void 0 : _this$billingAddress.countryId : (_this$deliveryAddress = this.deliveryAddress) === null || _this$deliveryAddress === void 0 ? void 0 : _this$deliveryAddress.countryId;
+
+      if (countryId) {
+        var validShippingCountry = this.shippingCountryList.find(function (country) {
+          return country.id === countryId;
+        });
+        this.isInvalidShippingCountry = !validShippingCountry;
+      }
     }
   },
   watch: {
@@ -72132,11 +72137,16 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     checkDeliveryAddressError: function checkDeliveryAddressError() {
-      var countryId = Number(this.deliveryAddress.id) === -99 ? this.billingAddress.countryId : this.deliveryAddress.countryId;
-      var validShippingCountry = this.shippingCountryList.find(function (country) {
-        return country.id === countryId;
-      });
-      this.isInvalidShippingCountry = !validShippingCountry;
+      var _this$billingAddress, _this$deliveryAddress;
+
+      var countryId = Number(this.deliveryAddress.id) === -99 ? (_this$billingAddress = this.billingAddress) === null || _this$billingAddress === void 0 ? void 0 : _this$billingAddress.countryId : (_this$deliveryAddress = this.deliveryAddress) === null || _this$deliveryAddress === void 0 ? void 0 : _this$deliveryAddress.countryId;
+
+      if (countryId) {
+        var validShippingCountry = this.shippingCountryList.find(function (country) {
+          return country.id === countryId;
+        });
+        this.isInvalidShippingCountry = !validShippingCountry;
+      }
     }
   },
   watch: {
@@ -73883,6 +73893,11 @@ var ApiService = __webpack_require__(/*! ../../services/ApiService */ "./resourc
         this.waiting = true;
         var lastPage = this.orderList.page;
         this.orderList.page = page;
+
+        if (this.ordersPerPage === 0 || Object(_helper_utils__WEBPACK_IMPORTED_MODULE_3__["isNullOrUndefined"])(this.ordersPerPage)) {
+          this.ordersPerPage = 5;
+        }
+
         ApiService.get("/rest/io/customer/order/list", {
           page: page,
           items: this.ordersPerPage
@@ -82004,7 +82019,7 @@ var state = function state() {
 
 var mutations = {
   setBasket: function setBasket(state, basket) {
-    if (state.data.id && JSON.stringify(basket) !== JSON.stringify(state.data)) {
+    if (state.data.sessionId && JSON.stringify(basket) !== JSON.stringify(state.data)) {
       document.dispatchEvent(new CustomEvent("afterBasketChanged", {
         detail: basket
       }));
