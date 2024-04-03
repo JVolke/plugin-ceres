@@ -1,87 +1,210 @@
 <template>
-    <picture v-if="!isBackgroundImage" :data-iesrc="fallbackUrl || imageUrl" :data-picture-class="pictureClass" :data-alt="alt" :data-title="title">
+    <picture
+        v-if="!isBackgroundImage"
+        :data-iesrc="defaultImageUrl"
+        :data-picture-class="pictureClass"
+        :data-alt="alt"
+        :data-title="title"
+        :id="uuid">
         <slot name="additionalimages"></slot>
-        <source :srcset="imageUrl" :type="mimeType">
+        <source :srcset="defaultImageUrl" :type="mimeType">
+        <source v-if="defaultImageUrl !== imageUrl" :srcset="imageUrl">
         <source v-if="fallbackUrl" :srcset="fallbackUrl">
+        <img v-if="receivedImageExtension === 'tif'" :src="defaultImageUrl" :alt="alt" type="image/tiff">
     </picture>
-    <div v-else :data-background-image="backgroundSource" :class="pictureClass">
+
+    <div v-else :data-background-image="defaultImageUrl || fallbackUrl" :class="pictureClass">
         <slot></slot>
     </div>
 </template>
 
 <script>
 import lozad from "../../plugins/lozad";
-import { detectWebP } from "../../helper/featureDetect";
+import {detectAvif, detectWebP} from "../../helper/featureDetect";
 
 export default {
-    props: {
-        imageUrl: String,
-        fallbackUrl: String,
-        isBackgroundImage: Boolean,
-        pictureClass: String,
-        alt: String,
-        title: String
+    props:
+    {
+        convertImage: {
+            type: Boolean,
+            default: true
+        },
+        imageUrl: {
+            type: String,
+            default: null
+        },
+        fallbackUrl: {
+            type: String,
+            default: null
+        },
+        isBackgroundImage: {
+            type: Boolean,
+            default: false
+        },
+        pictureClass: {
+            type: String,
+            default: null
+        },
+        alt: {
+            type: String,
+            default: null
+        },
+        title: {
+            type: String,
+            default: null
+        }
     },
-
     data()
     {
         return {
-            supported: undefined
+            imageConversionEnabled: App.config.log.modernImagesConversion,
+            receivedImageExtension: null,
+            browserSupportedImgExtension: null,
+            defaultImageUrl: this.imageUrl,
+            avifSupported: false,
+            avifExtension: 'avif',
+            webpSupported: false,
+            webpExtension: 'webp',
+            uuid: null,
+            imgRegex: /.?(\.\w+)(?:$|\?)/
         }
     },
-
     mounted()
     {
-        detectWebP(((supported) =>
-        {
-            this.supported = supported;
-            this.$nextTick(() =>
-            {
-                if(!this.isBackgroundImage)
-                {
-                    this.$el.classList.toggle("lozad");
-                }
-                lozad(this.$el).observe();
-            });
+        detectAvif(((avifSupported) => {
+            this.avifSupported = avifSupported;
+
+            if (avifSupported) {
+                this.$nextTick(() => {
+                    if (!this.isBackgroundImage) this.$el.classList.toggle('lozad');
+                    lozad(this.$el).observe();
+                });
+
+                this.propagateImageFormat();
+            }
+
+            if (!avifSupported) {
+                detectWebP(((webpSupported) => {
+                    this.webpSupported = webpSupported;
+
+                    if (webpSupported) {
+                        this.$nextTick(() => {
+                            if (!this.isBackgroundImage) this.$el.classList.toggle('lozad');
+                            lozad(this.$el).observe();
+                        });
+
+                        this.propagateImageFormat();
+                    }
+                }));
+            }
         }));
     },
-
     watch:
     {
+        defaultImageUrl()
+        {
+            this.$nextTick(() => {
+                this.$el.setAttribute('data-loaded', 'false');
+                lozad(this.$el).triggerLoad(this.$el);
+            });
+            this.$el.classList.remove('lozad');
+        },
         imageUrl()
         {
-            this.$nextTick(() =>
-            {
-                this.$el.setAttribute("data-loaded", false);
-                lozad(this.$el).triggerLoad(this.$el);
+            this.generateUuid();
+            this.$nextTick(() => {
+                this.propagateImageFormat();
+                document.getElementById(this.uuid).getElementsByTagName('img')?.[0].remove();
             });
         }
     },
+    computed:
+    {
+        mimeType()
+        {
+            const matches = this.defaultImageUrl?.match(this.imgRegex);
 
-    computed: {
-        /**
-         *  Determine appropriate image url to use as background source
-         */
-        backgroundSource() {
-            if(this.imageUrl && this.mimeType){
-                return this.supported ? this.imageUrl : this.fallbackUrl;
-            } else {
-                return this.imageUrl || this.fallbackUrl;
-            }
-        },
-
-        /**
-         * Check if url points to a .webp image and return appropriate mime-type
-         */
-        mimeType() {
-            const matches = this.imageUrl?.match(/.?(\.\w+)(?:$|\?)/);
-
-            if(matches)
-            {
-                return matches[1] === ".webp" ? "image/webp" : null;
-            }
+            if (matches) return `image/${matches[1].split('.').pop()}`;
 
             return null;
+        },
+        convertedImageUrl()
+        {
+            return `${this.imageUrl}.${this.browserSupportedImgExtension}`;
+        }
+    },
+    methods:
+    {
+        propagateImageFormat()
+        {
+            this.setReceivedImageExtension();
+            this.setBrowserSupportedImageExtension();
+            this.setDefaultImageUrl();
+        },
+        setReceivedImageExtension()
+        {
+            const matches = this.imageUrl?.match(this.imgRegex);
+
+            if (matches) this.receivedImageExtension = matches[1].split('.').pop();
+        },
+        setBrowserSupportedImageExtension()
+        {
+            if (this.avifSupported) {
+                this.browserSupportedImgExtension = this.avifExtension;
+                return;
+            }
+
+            if (this.webpSupported) {
+                this.browserSupportedImgExtension = this.webpExtension;
+                return;
+            }
+
+            this.browserSupportedImgExtension = this.receivedImageExtension !== this.avifExtension && this.receivedImageExtension !== this.webpExtension
+                ? this.receivedImageExtension
+                : 'jpeg';
+        },
+        setDefaultImageUrl()
+        {
+            if (this.imageShouldBeConverted()) {
+                if (this.receivedImageExtension === this.avifExtension) {
+                    this.defaultImageUrl = this.browserSupportedImgExtension === this.avifExtension
+                        ? this.imageUrl
+                        : this.convertedImageUrl;
+                    return;
+                }
+                if (this.receivedImageExtension === this.webpExtension) {
+                    if (this.browserSupportedImgExtension === this.avifExtension) {
+                        this.defaultImageUrl = this.convertedImageUrl;
+                        return;
+                    }
+                    if (this.browserSupportedImgExtension === this.webpExtension) {
+                        this.defaultImageUrl = this.imageUrl;
+                        return;
+                    }
+
+                    this.defaultImageUrl = this.imageUrl;
+                    return;
+                }
+
+                // convert anything other than avif or webp into browser supported format.
+                this.defaultImageUrl = this.convertedImageUrl;
+                return;
+            }
+            this.defaultImageUrl = this.imageUrl || this.fallbackUrl;
+        },
+        imageShouldBeConverted()
+        {
+            const validConversionExtensions = ['jpg', 'JPG', 'jpeg', 'JPEG', 'png', 'PNG', 'webp'];
+
+            return this.convertImage 
+                && this.imageConversionEnabled
+                && /\/item\/images\//.test(this.imageUrl)
+                && this.browserSupportedImgExtension !== this.receivedImageExtension
+                && validConversionExtensions.includes(this.receivedImageExtension)
+        },
+        generateUuid()
+        {
+            this.uuid = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         }
     }
 }
